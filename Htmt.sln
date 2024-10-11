@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Htmt", "Htmt\Htmt.csproj", "{8749937C-2C49-4FEF-AF89-C85F4E10F21C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HtmtTests", "HtmtTests\HtmtTests.csproj", "{26771594-3F6B-4704-828C-9C2CE1A349E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8749937C-2C49-4FEF-AF89-C85F4E10F21C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8749937C-2C49-4FEF-AF89-C85F4E10F21C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8749937C-2C49-4FEF-AF89-C85F4E10F21C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8749937C-2C49-4FEF-AF89-C85F4E10F21C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26771594-3F6B-4704-828C-9C2CE1A349E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26771594-3F6B-4704-828C-9C2CE1A349E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26771594-3F6B-4704-828C-9C2CE1A349E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26771594-3F6B-4704-828C-9C2CE1A349E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
