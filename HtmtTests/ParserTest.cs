@@ -1,3 +1,5 @@
+using System.Xml;
+
 namespace HtmtTests;
 
 [TestClass]
@@ -34,5 +36,24 @@ public class ParserTest
         var html = parser.ToHtml();
         
         Assert.AreEqual("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"><html><head><title>Hello, World!</title></head><body><h1>Welcome to the world!</h1></body></html>", html);
+    }
+    
+    [TestMethod]
+    public void TestNoClosingTag()
+    {
+        const string template = "<html><head></head><body><img src=\"asd\" /></body></html>";
+        var parser = new Htmt.Parser { Template = template };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><head></head><body><img src=\"asd\" /></body></html>", html);
+    }
+
+    [TestMethod]
+    public void TestNoClosingTagThrows()
+    {
+        const string template = "<html><head></head><body><img src=\"asd\"></body></html>";
+        var parser = new Htmt.Parser { Template = template };
+        
+        Assert.ThrowsException<XmlException>(() => parser.ToHtml());
     }
 }

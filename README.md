@@ -1,7 +1,8 @@
 ﻿# Htmt
 
-A simple templating language that is a superset of HTML/XML and is designed to be easy to read, write and have good editor support
-due to it being HTML/XML based and thus not needing any additional editor plugins.
+A simple templating language for .NET projects that is a superset of HTML/XML and is designed to be easy to read, write and have good editor support
+due to it being HTML/XML based and thus not needing any additional editor plugins. It fully supports 
+trimming and native AOT compilation.
 
 ## Example syntax
 
@@ -25,6 +26,13 @@ due to it being HTML/XML based and thus not needing any additional editor plugin
     </body>
 </html>
 ```
+
+Note how in `x:if`, `x:for` and `x:as` attributes the value is not enclosed in curly braces whereas in `x:inner-text` and `x:inner-html` it is.
+That's because these attributes are not meant to be interpolated, but rather to be evaluated as expressions.
+
+Attributes that are meant to be interpolated are enclosed in curly braces, like `{title}` and `{post.title}`, 
+which will be replaced with the value of the `title` and `post.title` keys in the data dictionary, respectively. 
+It also means you can add other text around the interpolation, like `Hello, {name}!`.
 
 ## Installation
 
@@ -190,4 +198,84 @@ Results in:
 
 ## Extending
 
-To be written.
+### Attribute Parsers
+
+You can add (or replace) attribute parsers in Htmt by adding them to the `AttributeParsers` array, 
+when creating a new instance of the `Parser` class.
+
+```csharp
+var parser = new Htmt.Parser
+{
+    Template = template,
+    Data = data,
+    AttributeParsers = [
+        new MyCustomAttributeParser()
+    ]
+};
+```
+
+A custom attribute parser must implement the `IAttributeParser` interface:
+
+```csharp
+public interface IAttributeParser
+{
+    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes);
+    
+    public string Name { get; }
+}
+```
+
+The `Parse` method is where the attribute parser should do its work, and the `Name` property should return the name of the attribute it should parse. 
+For example if you want to add a custom attribute parser for an attribute called `x:custom`, you would do the following:
+
+```csharp
+public class CustomAttributeParser : IAttributeParser
+{
+    public string Name => "custom";
+    
+    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
+    {
+        foreach (XmlNode node in nodes)
+        {
+            // all of the nodes are nodes that have the `x:custom` attribute,
+            // so you can do whatever you want with them here.
+        }
+    }
+}
+```
+
+To get an array of default attribute parsers, you can call `Htmt.Parser.DefaultAttributeParsers()`, 
+if you want to add your custom attribute parsers to the default ones. But you can also mix and match however you like.
+
+#### List of built-in attribute parsers
+
+- `Htmt.AttributeParsers.InnerTextAttributeParser` - Parses the `x:inner-text` attribute.
+- `Htmt.AttributeParsers.InnerHtmlAttributeParser` - Parses the `x:inner-html` attribute.
+- `Htmt.AttributeParsers.OuterTextAttributeParser` - Parses the `x:outer-text` attribute.
+- `Htmt.AttributeParsers.OuterHtmlAttributeParser` - Parses the `x:outer-html` attribute.
+- `Htmt.AttributeParsers.IfAttributeParser` - Parses the `x:if` attribute.
+- `Htmt.AttributeParsers.UnlessAttributeParser` - Parses the `x:unless` attribute.
+- `Htmt.AttributeParsers.ForAttributeParser` - Parses the `x:for` attribute.
+- `Htmt.AttributeParsers.HrefAttributeParser` - Parses the `x:href` attribute.
+
+## Limitations
+
+Htmt is written on top of the `System.Xml` namespace, which means it has the same limitations as `XmlDocument`. 
+This means that some HTML that is otherwise allowed by the browsers will throw an error when parsed by Htmt. 
+
+For example, the following HTML will throw an error:
+
+```html
+<img src="image.jpeg">
+```
+
+This is because the `img` tag self-closes in HTML, but not in XML. 
+To fix this, you can add a closing tag like so:
+
+```html
+<img src="image.jpeg" />
+```
+
+While a third-party library would probably solve this, my goal was to keep the library 
+dependency-free and as simple as possible because I'm just one person and I want something that I can maintain easily 
+for a long time.
