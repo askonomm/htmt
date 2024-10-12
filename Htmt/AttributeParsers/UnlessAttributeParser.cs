@@ -4,7 +4,7 @@ namespace Htmt.AttributeParsers;
 
 public class UnlessAttributeParser : IAttributeParser
 {
-    public string Name => "unless";
+    public string XTag => "//*[@x:unless]";
     
     public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
     {
@@ -18,7 +18,7 @@ public class UnlessAttributeParser : IAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var key = Helper.GetAttributeValue(n, Name);
+            var key = n.GetAttribute("x:unless");
             var value = Helper.FindValueByKeys(data, key.Split('.'));
             
             if(value == null) continue;
