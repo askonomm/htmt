@@ -20,6 +20,7 @@ public partial class OuterTextAttributeParser : IAttributeParser
             if (node is not XmlElement n) continue;
 
             var outerVal = n.GetAttribute("x:outer-text");
+            n.RemoveAttribute("x:outer-text");
             
             if (string.IsNullOrEmpty(outerVal)) continue;
             

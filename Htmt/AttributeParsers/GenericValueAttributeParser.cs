@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Htmt.AttributeParsers;
@@ -28,6 +27,7 @@ public class GenericValueAttributeParser : IAttributeParser
                 var val = n.GetAttribute(attr.Name);
                 var newVal = Helper.ReplaceKeysWithData(val, data);
                 n.SetAttribute(attr.Name[2..], newVal);
+                n.RemoveAttribute(attr.Name);
             }
         }
     }

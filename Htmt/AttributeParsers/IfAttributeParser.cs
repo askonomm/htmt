@@ -19,9 +19,15 @@ public class IfAttributeParser : IAttributeParser
             if (node is not XmlElement n) continue;
 
             var key = n.GetAttribute("x:if");
+            n.RemoveAttribute("x:if");
             var value = Helper.FindValueByKeys(data, key.Split('.'));
             
-            if(value == null) continue;
+            // Remove node if value is null
+            if(value == null)
+            {
+                n.ParentNode?.RemoveChild(n);
+                continue;
+            }
             
             // Remove node if value is falsey
             var removeNode = value switch

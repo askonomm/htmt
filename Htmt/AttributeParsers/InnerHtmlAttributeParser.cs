@@ -20,6 +20,7 @@ public class InnerHtmlAttributeParser: IAttributeParser
             if (node is not XmlElement n) continue;
 
             var innerHtmlVal = n.GetAttribute("x:inner-html");
+            n.RemoveAttribute("x:inner-html");
             
             if (string.IsNullOrEmpty(innerHtmlVal)) continue;
             

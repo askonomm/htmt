@@ -20,9 +20,10 @@ public class InnerTextAttributeParser : IAttributeParser
             if (node is not XmlElement n) continue;
 
             var innerVal = n.GetAttribute("x:inner-text");
-            
+            n.RemoveAttribute("x:inner-text");
+
             if (string.IsNullOrEmpty(innerVal)) continue;
-            
+
             n.InnerText = Helper.ReplaceKeysWithData(innerVal, data);
         }
     }

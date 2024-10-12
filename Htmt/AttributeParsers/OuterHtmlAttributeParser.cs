@@ -19,6 +19,7 @@ public class OuterHtmlAttributeParser : IAttributeParser
             if (node is not XmlElement n) continue;
 
             var outerHtmlVal = n.GetAttribute("x:outer-html");
+            n.RemoveAttribute("x:outer-html");
             
             if (string.IsNullOrEmpty(outerHtmlVal)) continue;
             
