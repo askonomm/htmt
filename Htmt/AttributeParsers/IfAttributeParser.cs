@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Xml;
 
 namespace Htmt.AttributeParsers;
@@ -36,6 +37,8 @@ public class IfAttributeParser : IAttributeParser
                 int i => i == 0,
                 double d => d == 0,
                 string s => string.IsNullOrEmpty(s),
+                IEnumerable<object> e => !e.Any(),
+                IDictionary d => d.Count == 0,
                 _ => false
             };
             
