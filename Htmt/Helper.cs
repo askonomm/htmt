@@ -61,21 +61,6 @@ public partial class Helper
         }
     }
     
-    public static string GetAttributeValue(XmlElement node, string attributeName)
-    {
-        var val = node.GetAttribute($"x:{attributeName}");
-        
-        return val;
-    }
-    
-    public static void RemoveAttributes(XmlElement node, params string[] attributeNames)
-    {
-        foreach (var attributeName in attributeNames)
-        {
-            node.RemoveAttribute($"x:{attributeName}");
-        }
-    }
-    
     [GeneratedRegex(@"(?<name>\{.*?\})")]
     private static partial Regex WholeKeyRegex();
     

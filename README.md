@@ -180,21 +180,23 @@ Results in:
 Note that the `x:as` attribute is optional. If you just want to loop over a data structure,
 but you don't care about using the data of each individual iteration, you can omit it.
 
-### `x:href`
+### `x:*` (Generic Value Attributes)
 
-Sets the `href` attribute of the element to the value of the attribute.
+Above are all the special attributes that do some logical operation, but you can also use the `x:*` attributes to set any attribute on an element to the value of the attribute.
 
-Htmt template where `url` is `/hello-world`:
+For example, to set the `href` attribute of an element, you can use the `x:href` attribute:
 
 ```html
-<a x:href="{url}">Hello, World!</a>
+<a x:href="/blog/{slug}">Hello, World!</a>
 ```
 
 Results in:
 
 ```html
-<a href="/hello-world">Hello, World!</a>
+<a href="/blog/hello-world">Hello, World!</a>
 ```
+
+If `slug` is `hello-world`.
 
 ## Extending
 
@@ -219,19 +221,19 @@ A custom attribute parser must implement the `IAttributeParser` interface:
 ```csharp
 public interface IAttributeParser
 {
-    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes);
+    public string XTag { get; }
     
-    public string Name { get; }
+    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes);
 }
 ```
 
-The `Parse` method is where the attribute parser should do its work, and the `Name` property should return the name of the attribute it should parse. 
+The `Parse` method is where the attribute parser should do its work, and the `XTag` property should return the xtag pattern for the nodes it should parse. 
 For example if you want to add a custom attribute parser for an attribute called `x:custom`, you would do the following:
 
 ```csharp
 public class CustomAttributeParser : IAttributeParser
 {
-    public string Name => "custom";
+    public string XTag => "//*[@x:custom]";
     
     public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
     {
@@ -256,7 +258,7 @@ if you want to add your custom attribute parsers to the default ones. But you ca
 - `Htmt.AttributeParsers.IfAttributeParser` - Parses the `x:if` attribute.
 - `Htmt.AttributeParsers.UnlessAttributeParser` - Parses the `x:unless` attribute.
 - `Htmt.AttributeParsers.ForAttributeParser` - Parses the `x:for` attribute.
-- `Htmt.AttributeParsers.HrefAttributeParser` - Parses the `x:href` attribute.
+- `Htmt.AttributeParsers.GenericValueAttributeParser` - Parses the `x:*` attributes.
 
 ## Limitations
 

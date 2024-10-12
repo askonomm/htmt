@@ -61,9 +61,9 @@ public class Parser
             new OuterTextAttributeParser(),
             new InnerHtmlAttributeParser(),
             new OuterHtmlAttributeParser(),
-            new HrefAttributeParser(),
             new IfAttributeParser(),
             new UnlessAttributeParser(),
+            new GenericValueAttributeParser()
         ];
     }
     
@@ -119,22 +119,31 @@ public class Parser
         
         foreach(var parser in parsers)
         {
-            var nodes = Xml.DocumentElement?.SelectNodes($"//*[@x:{parser.Name}]", _nsManager);
+            var nodes = Xml.DocumentElement?.SelectNodes(parser.XTag, _nsManager);
             var clonedData = new Dictionary<string, object>(Data);
             parser.Parse(Xml, clonedData, nodes);
-            
-            // Clean up named attributes
-            if (nodes == null) continue;
-            
-            foreach (var node in nodes)
-            {
-                if (node is not XmlElement n) continue;
+        }
+        
+        // Remove all leftover attributes that start with x:
+        var leftOverNodes = Xml.DocumentElement?.SelectNodes("//*[@*[starts-with(name(), 'x:')]]", _nsManager);
+        
+        if (leftOverNodes == null) return;
+        
+        foreach (var node in leftOverNodes.Cast<XmlNode>())
+        {
+            if (node is not XmlElement element) continue;
                 
-                n.RemoveAttribute($"x:{parser.Name}");
+            var attributes = element.Attributes.Cast<XmlAttribute>()
+                .Where(a => a.Name.StartsWith("x:"))
+                .ToList();
+                
+            foreach (var attr in attributes)
+            {
+                element.RemoveAttribute(attr.Name);
             }
         }
     }
-
+    
     private void AddIdentifierToNodes()
     {
         if (Xml.DocumentElement == null) return;

@@ -5,7 +5,7 @@ namespace Htmt.AttributeParsers;
 
 public class InnerHtmlAttributeParser: IAttributeParser
 {
-    public string Name => "inner-html";
+    public string XTag => "//*[@x:inner-html]";
     
     public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
     {
@@ -19,7 +19,8 @@ public class InnerHtmlAttributeParser: IAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var innerHtmlVal = Helper.GetAttributeValue(n, Name);
+            var innerHtmlVal = n.GetAttribute("x:inner-html");
+            n.RemoveAttribute("x:inner-html");
             
             if (string.IsNullOrEmpty(innerHtmlVal)) continue;
             

@@ -6,18 +6,18 @@ namespace HtmtTests;
 public class AttributeParserTest
 {
     [TestMethod]
-    public void TestHrefAttributeParser()
+    public void TestGenericValueAttributeParser()
     {
-        const string template = "<html><body><a x:href=\"{url}\">Click here</a></body></html>";
-        var data = new Dictionary<string, object> { { "url", "https://www.example.com" } };
+        const string template = "<html><body><a x:href=\"{url}\" x:title=\"Hello {name}\">Click here</a></body></html>";
+        var data = new Dictionary<string, object> { { "url", "https://www.example.com" }, { "name", "Example Website" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
         
-        Assert.AreEqual("<html><body><a href=\"https://www.example.com\">Click here</a></body></html>", html);
+        Assert.AreEqual("<html><body><a href=\"https://www.example.com\" title=\"Hello Example Website\">Click here</a></body></html>", html);
     }
     
     [TestMethod]
-    public void TestHrefAttributeParserWithouData()
+    public void TestGenericValueAttributeParserWithouData()
     {
         const string template = "<html><body><a x:href=\"{url}\">Click here</a></body></html>";
         var parser = new Parser { Template = template };
@@ -93,6 +93,16 @@ public class AttributeParserTest
     }
     
     [TestMethod]
+    public void TestIfNoDataAttributeParser()
+    {
+        const string template = "<html><body><h1 x:if=\"show\" x:inner-text=\"{title}\"></h1></body></html>";
+        var parser = new Parser { Template = template };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body></body></html>", html);
+    }
+    
+    [TestMethod]
     public void TestUnlessAttributeParser()
     {
         const string template = "<html><body><h1 x:unless=\"show\" x:inner-text=\"{title}\"></h1></body></html>";
@@ -109,6 +119,16 @@ public class AttributeParserTest
         const string template = "<html><body><h1 x:unless=\"show\" x:inner-text=\"{title}\"></h1></body></html>";
         var data = new Dictionary<string, object> { { "show", true }, { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body></body></html>", html);
+    }
+    
+    [TestMethod]
+    public void TestUnlessNoDataAttributeParser()
+    {
+        const string template = "<html><body><h1 x:unless=\"show\" x:inner-text=\"{title}\"></h1></body></html>";
+        var parser = new Parser { Template = template };
         var html = parser.ToHtml();
         
         Assert.AreEqual("<html><body></body></html>", html);

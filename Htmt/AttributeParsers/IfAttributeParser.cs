@@ -4,7 +4,7 @@ namespace Htmt.AttributeParsers;
 
 public class IfAttributeParser : IAttributeParser
 {
-    public string Name => "if";
+    public string XTag => "//*[@x:if]";
     
     public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
     {
@@ -18,18 +18,25 @@ public class IfAttributeParser : IAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var key = Helper.GetAttributeValue(n, Name);
+            var key = n.GetAttribute("x:if");
+            n.RemoveAttribute("x:if");
             var value = Helper.FindValueByKeys(data, key.Split('.'));
             
-            if(value == null) continue;
+            // Remove node if value is null
+            if(value == null)
+            {
+                n.ParentNode?.RemoveChild(n);
+                continue;
+            }
             
+            // Remove node if value is falsey
             var removeNode = value switch
             {
                 bool b => !b,
                 int i => i == 0,
                 double d => d == 0,
                 string s => string.IsNullOrEmpty(s),
-                _ => true
+                _ => false
             };
             
             if (removeNode)

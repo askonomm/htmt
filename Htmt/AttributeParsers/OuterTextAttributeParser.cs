@@ -5,7 +5,7 @@ namespace Htmt.AttributeParsers;
 
 public partial class OuterTextAttributeParser : IAttributeParser
 {
-    public string Name => "outer-text";
+    public string XTag => "//*[@x:outer-text]";
     
     public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
     {
@@ -19,7 +19,8 @@ public partial class OuterTextAttributeParser : IAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var outerVal = Helper.GetAttributeValue(n, Name);
+            var outerVal = n.GetAttribute("x:outer-text");
+            n.RemoveAttribute("x:outer-text");
             
             if (string.IsNullOrEmpty(outerVal)) continue;
             

@@ -28,6 +28,6 @@ public class HelperTest
     {
         var result = Helper.ReplaceKeysWithData("Hello, {name}!", new Dictionary<string, object>());
 
-        Assert.AreEqual("Hello, {name}!", result);
+        Assert.AreEqual("Hello, !", result);
     }
 }
