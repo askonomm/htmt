@@ -6,14 +6,14 @@
         <Nullable>enable</Nullable>
         <Authors>Asko Nõmm</Authors>
         <PackageId>Htmt</PackageId>
-        <Version>1.1.0</Version>
+        <Version>1.1.1</Version>
         <Description>HTML/XML templating library for .NET</Description>
         <PackageTags>html xml template</PackageTags>
         <PackageProjectUrl>https://github.com/askonomm/htmt</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/askonomm/htmt</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Replaced HrefAttributeParser with a GenericValueAttributeParser, and instead of Name attributes now target the XTag directly for more flexibility.</PackageReleaseNotes>
+        <PackageReleaseNotes>The x:if and x:unless attributes now support IEnumerable and IDictionary checks.</PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     
