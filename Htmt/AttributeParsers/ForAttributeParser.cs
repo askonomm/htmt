@@ -20,15 +20,7 @@ public class ForAttributeParser : IAttributeParser
 
             var collection = n.GetAttribute("x:for");
             var asVar = n.GetAttribute("x:as");
-
-            // We need to remove the attributes from the node here already,
-            // because we're passing the outerXml to the parser, 
-            // and that would otherwise start infinitely parsing the For attributes.
-            //
-            // This is only a necessity with recursive parsing if you pass along the outerXml, 
-            // otherwise you won't have to care because Htmt cleans up the attributes by itself by `Name`,
-            // after the parser has been executed. Or in the case you use additional attributes,
-            // you can remove them by yourself as well.
+            
             n.RemoveAttribute("x:for");
             n.RemoveAttribute("x:as");
 
