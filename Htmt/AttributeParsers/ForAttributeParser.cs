@@ -6,7 +6,7 @@ public class ForAttributeParser : IAttributeParser
 {
     public string XTag => "//*[@x:for]";
     
-    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
+    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
@@ -31,7 +31,7 @@ public class ForAttributeParser : IAttributeParser
 
             foreach (var item in enumerable)
             {
-                var iterationData = new Dictionary<string, object>(data);
+                var iterationData = new Dictionary<string, object?>(data);
 
                 if (!string.IsNullOrEmpty(asVar))
                 {

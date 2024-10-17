@@ -6,7 +6,7 @@ namespace Htmt;
 
 public partial class Helper
 {
-    public static object? FindValueByKeys(Dictionary<string, object> data, string[] keys)
+    public static object? FindValueByKeys(Dictionary<string, object?> data, string[] keys)
     {
         while (true)
         {
@@ -64,7 +64,7 @@ public partial class Helper
     [GeneratedRegex(@"(?<name>\{.*?\})")]
     private static partial Regex WholeKeyRegex();
     
-    public static string ReplaceKeysWithData(string str, Dictionary<string, object> data)
+    public static string ReplaceKeysWithData(string str, Dictionary<string, object?> data)
     {
         var matches = WholeKeyRegex().Matches(str).Select(x => x.Groups["name"].Value).ToArray();
         

@@ -160,11 +160,22 @@ public class AttributeParserTest
     public void TestIfEmptyDictionaryAttributeParser()
     {
         const string template = "<html><body><p x:if=\"items\">There are items!</p></body></html>";
-        var data = new Dictionary<string, object> { { "items", new Dictionary<string, string>() } };
+        var data = new Dictionary<string, object?> { { "items", new Dictionary<string, string>() } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
         Assert.AreEqual("<html><body></body></html>", html);
+    }
+
+    [TestMethod]
+    public void TestComplexExpressionIfAttributeParser()
+    {
+        const string template = "<html><body><h1 x:if=\"(show is true) and (title is 'Hello, World!')\" x:inner-text=\"{title}\"></h1></body></html>";
+        var data = new Dictionary<string, object?> { { "show", true }, { "title", "Hello, World!" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><h1>Hello, World!</h1></body></html>", html);
     }
 
     [TestMethod]
@@ -259,6 +270,17 @@ public class AttributeParserTest
         var html = parser.ToHtml();
 
         Assert.AreEqual("<html><body><p>There are no items!</p></body></html>", html);
+    }
+    
+    [TestMethod]
+    public void TestComplexExpressionUnlessAttributeParser()
+    {
+        const string template = "<html><body><h1 x:unless=\"((show is true) and (title is 'Hello, World!')) is true\" x:inner-text=\"{title}\"></h1></body></html>";
+        var data = new Dictionary<string, object?> { { "show", true }, { "title", "Hello, World!" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body></body></html>", html);
     }
 
     [TestMethod]

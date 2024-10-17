@@ -10,7 +10,7 @@ public class Parser
 
     public string Template { get; init; } = string.Empty;
 
-    public Dictionary<string, object> Data { get; init; } = new();
+    public Dictionary<string, object?> Data { get; init; } = new();
 
     public IAttributeParser[] AttributeParsers { get; init; } = [];
     
@@ -120,7 +120,7 @@ public class Parser
         foreach(var parser in parsers)
         {
             var nodes = Xml.DocumentElement?.SelectNodes(parser.XTag, _nsManager);
-            var clonedData = new Dictionary<string, object>(Data);
+            var clonedData = new Dictionary<string, object?>(Data);
             parser.Parse(Xml, clonedData, nodes);
         }
         

@@ -6,7 +6,7 @@ public class OuterHtmlAttributeParser : IAttributeParser
 {
     public string XTag => "//*[@x:outer-html]";
     
-    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
+    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
