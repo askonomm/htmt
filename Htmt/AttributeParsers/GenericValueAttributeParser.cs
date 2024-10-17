@@ -6,7 +6,7 @@ public class GenericValueAttributeParser : IAttributeParser
 {
     public string XTag => "//*[@*[starts-with(name(), 'x:')]]";
     
-    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
+    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)

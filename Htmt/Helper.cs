@@ -6,7 +6,7 @@ namespace Htmt;
 
 public partial class Helper
 {
-    public static object? FindValueByKeys(Dictionary<string, object> data, string[] keys)
+    public static object? FindValueByKeys(Dictionary<string, object?> data, string[] keys)
     {
         while (true)
         {
@@ -22,7 +22,7 @@ public partial class Helper
 
             switch (v)
             {
-                case Dictionary<string, object> dict:
+                case Dictionary<string, object?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
 
@@ -30,27 +30,27 @@ public partial class Helper
                     keys = newKeys;
                     continue;
                 }
-                case Dictionary<string, string> dict:
+                case Dictionary<string, string?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
 
-                    data = dict.ToDictionary(x => x.Key, x => (object)x.Value);
+                    data = dict.ToDictionary(x => x.Key, object? (x) => x.Value);
                     keys = newKeys;
                     continue;
                 }
-                case Dictionary<string, int> dict:
+                case Dictionary<string, int?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
 
-                    data = dict.ToDictionary(x => x.Key, x => (object)x.Value);
+                    data = dict.ToDictionary(x => x.Key, x => (object?) x.Value);
                     keys = newKeys;
                     continue;
                 }
-                case Dictionary<string, bool> dict:
+                case Dictionary<string, bool?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
-
-                    data = dict.ToDictionary(x => x.Key, x => (object)x.Value);
+                    
+                    data = dict.ToDictionary(x => x.Key, x => (object?) x.Value);
                     keys = newKeys;
                     continue;
                 }
@@ -64,7 +64,7 @@ public partial class Helper
     [GeneratedRegex(@"(?<name>\{.*?\})")]
     private static partial Regex WholeKeyRegex();
     
-    public static string ReplaceKeysWithData(string str, Dictionary<string, object> data)
+    public static string ReplaceKeysWithData(string str, Dictionary<string, object?> data)
     {
         var matches = WholeKeyRegex().Matches(str).Select(x => x.Groups["name"].Value).ToArray();
         

@@ -7,7 +7,7 @@ public class IfAttributeParser : IAttributeParser
 {
     public string XTag => "//*[@x:if]";
     
-    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
+    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
@@ -21,30 +21,47 @@ public class IfAttributeParser : IAttributeParser
 
             var key = n.GetAttribute("x:if");
             n.RemoveAttribute("x:if");
-            var value = Helper.FindValueByKeys(data, key.Split('.'));
             
-            // Remove node if value is null
-            if(value == null)
+            // if key is a single word, we just check for a truthy value
+            if (!key.Contains(' '))
             {
-                n.ParentNode?.RemoveChild(n);
-                continue;
+                var value = Helper.FindValueByKeys(data, key.Split('.'));
+
+                // Remove node if value is null
+                if (value == null)
+                {
+                    n.ParentNode?.RemoveChild(n);
+                    continue;
+                }
+
+                // Remove node if value is falsey
+                var removeNode = value switch
+                {
+                    bool b => !b,
+                    int i => i == 0,
+                    double d => d == 0,
+                    string s => string.IsNullOrEmpty(s),
+                    IEnumerable<object> e => !e.Any(),
+                    IDictionary d => d.Count == 0,
+                    _ => false
+                };
+
+                if (removeNode)
+                {
+                    n.ParentNode?.RemoveChild(n);
+                }
             }
             
-            // Remove node if value is falsey
-            var removeNode = value switch
+            // if key contains multiple words, evaluate the expression with ExpressionValidator
+            else
             {
-                bool b => !b,
-                int i => i == 0,
-                double d => d == 0,
-                string s => string.IsNullOrEmpty(s),
-                IEnumerable<object> e => !e.Any(),
-                IDictionary d => d.Count == 0,
-                _ => false
-            };
-            
-            if (removeNode)
-            {
-                n.ParentNode?.RemoveChild(n);
+                var expression = new ExpressionValidator(key);
+                var result = expression.Validates(data);
+
+                if (!result)
+                {
+                    n.ParentNode?.RemoveChild(n);
+                }
             }
         }
     }

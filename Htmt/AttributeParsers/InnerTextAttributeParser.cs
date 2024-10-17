@@ -7,7 +7,7 @@ public class InnerTextAttributeParser : IAttributeParser
 {
     public string XTag => "//*[@x:inner-text]";
     
-    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
+    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
