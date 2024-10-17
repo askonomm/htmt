@@ -72,13 +72,6 @@ public class ExpressionValidator(string expression)
 
     private static bool EvaluateSimpleExp(string exp)
     {
-        var conditionParts = exp.Split(new[] { " is " }, StringSplitOptions.None);
-
-        if (conditionParts.Length > 1)
-        {
-            return EvaluateCondition(exp.Trim());
-        }
-        
         var orParts = exp.Split(new[] { " or " }, StringSplitOptions.None);
 
         foreach (var orPart in orParts)
