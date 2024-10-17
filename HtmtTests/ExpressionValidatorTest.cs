@@ -48,7 +48,7 @@ public class ExpressionValidatorTest
     [TestMethod]
     public void TestStringComparisons()
     {
-        var returnsTrue = new ExpressionValidator("test is 'test'").Validates(new Dictionary<string, object>() { { "test", "test" } });
+        var returnsTrue = new ExpressionValidator("test is 'test'").Validates(new Dictionary<string, object?>() { { "test", "test" } });
         var returnsFalse = new ExpressionValidator("test is 'test'").Validates(new Dictionary<string, object?>() { { "test", "test2" } });
         
         Assert.IsTrue(returnsTrue);

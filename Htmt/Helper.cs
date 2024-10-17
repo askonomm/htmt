@@ -30,27 +30,27 @@ public partial class Helper
                     keys = newKeys;
                     continue;
                 }
-                case Dictionary<string, string> dict:
+                case Dictionary<string, string?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
 
-                    data = dict.ToDictionary(x => x.Key, x => (object)x.Value);
+                    data = dict.ToDictionary(x => x.Key, object? (x) => x.Value);
                     keys = newKeys;
                     continue;
                 }
-                case Dictionary<string, int> dict:
+                case Dictionary<string, int?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
 
-                    data = dict.ToDictionary(x => x.Key, x => (object)x.Value);
+                    data = dict.ToDictionary(x => x.Key, x => (object?) x.Value);
                     keys = newKeys;
                     continue;
                 }
-                case Dictionary<string, bool> dict:
+                case Dictionary<string, bool?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
-
-                    data = dict.ToDictionary(x => x.Key, x => (object)x.Value);
+                    
+                    data = dict.ToDictionary(x => x.Key, x => (object?) x.Value);
                     keys = newKeys;
                     continue;
                 }
