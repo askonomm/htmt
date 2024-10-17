@@ -22,7 +22,7 @@ public partial class Helper
 
             switch (v)
             {
-                case Dictionary<string, object> dict:
+                case Dictionary<string, object?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
 
