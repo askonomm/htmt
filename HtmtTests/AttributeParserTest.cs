@@ -9,8 +9,7 @@ public class AttributeParserTest
     public void TestGenericValueAttributeParser()
     {
         const string template = "<html><body><a x:href=\"{url}\" x:title=\"Hello {name}\">Click here</a></body></html>";
-        var data = new Dictionary<string, object>
-            { { "url", "https://www.example.com" }, { "name", "Example Website" } };
+        var data = new Dictionary<string, object?> { { "url", "https://www.example.com" }, { "name", "Example Website" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -33,7 +32,7 @@ public class AttributeParserTest
     public void TestInnerTextAttributeParser()
     {
         const string template = "<html><body><h1 x:inner-text=\"{title}\"></h1></body></html>";
-        var data = new Dictionary<string, object> { { "title", "Hello, World!" } };
+        var data = new Dictionary<string, object?> { { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -44,7 +43,7 @@ public class AttributeParserTest
     public void TestInnerHtmlAttributeParser()
     {
         const string template = "<html><body><div x:inner-html=\"{content}\"></div></body></html>";
-        var data = new Dictionary<string, object> { { "content", "<h1>Hello, World!</h1>" } };
+        var data = new Dictionary<string, object?> { { "content", "<h1>Hello, World!</h1>" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -55,7 +54,7 @@ public class AttributeParserTest
     public void TestOuterTextAttributeParser()
     {
         const string template = "<html><body><h1 x:outer-text=\"{title}\"></h1></body></html>";
-        var data = new Dictionary<string, object> { { "title", "Hello, World!" } };
+        var data = new Dictionary<string, object?> { { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -66,7 +65,7 @@ public class AttributeParserTest
     public void TestOuterHtmlAttributeParser()
     {
         const string template = "<html><body><div x:outer-html=\"{content}\"></div></body></html>";
-        var data = new Dictionary<string, object> { { "content", "<h1>Hello, World!</h1>" } };
+        var data = new Dictionary<string, object?> { { "content", "<h1>Hello, World!</h1>" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -77,7 +76,7 @@ public class AttributeParserTest
     public void TestIfAttributeParser()
     {
         const string template = "<html><body><h1 x:if=\"show\" x:inner-text=\"{title}\"></h1></body></html>";
-        var data = new Dictionary<string, object> { { "show", true }, { "title", "Hello, World!" } };
+        var data = new Dictionary<string, object?> { { "show", true }, { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -88,7 +87,7 @@ public class AttributeParserTest
     public void TestIfNotAttributeParser()
     {
         const string template = "<html><body><h1 x:if=\"show\" x:inner-text=\"{title}\"></h1></body></html>";
-        var data = new Dictionary<string, object> { { "show", false }, { "title", "Hello, World!" } };
+        var data = new Dictionary<string, object?> { { "show", false }, { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -109,7 +108,7 @@ public class AttributeParserTest
     public void TestIfListAttributeParser()
     {
         const string template = "<html><body><p x:if=\"items\">There are items!</p></body></html>";
-        var data = new Dictionary<string, object> { { "items", new List<string> { "Item 1", "Item 2", "Item 3" } } };
+        var data = new Dictionary<string, object?> { { "items", new List<string> { "Item 1", "Item 2", "Item 3" } } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -120,7 +119,7 @@ public class AttributeParserTest
     public void TestIfListOfDictsAttributeParser()
     {
         const string template = "<html><body><p x:if=\"items\">There are items!</p></body></html>";
-        var data = new Dictionary<string, object>
+        var data = new Dictionary<string, object?>
         {
             {
                 "items",
@@ -137,7 +136,7 @@ public class AttributeParserTest
     public void TestIfEmptyListAttributeParser()
     {
         const string template = "<html><body><p x:if=\"items\">There are items!</p></body></html>";
-        var data = new Dictionary<string, object> { { "items", new List<string>() } };
+        var data = new Dictionary<string, object?> { { "items", new List<string>() } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -148,8 +147,7 @@ public class AttributeParserTest
     public void TestIfDictionaryAttributeParser()
     {
         const string template = "<html><body><p x:if=\"items\">There are items!</p></body></html>";
-        var data = new Dictionary<string, object>
-            { { "items", new Dictionary<string, string> { { "key1", "Item 1" }, { "key2", "Item 2" } } } };
+        var data = new Dictionary<string, object?> { { "items", new Dictionary<string, string> { { "key1", "Item 1" }, { "key2", "Item 2" } } } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -182,7 +180,7 @@ public class AttributeParserTest
     public void TestUnlessAttributeParser()
     {
         const string template = "<html><body><h1 x:unless=\"show\" x:inner-text=\"{title}\"></h1></body></html>";
-        var data = new Dictionary<string, object> { { "show", false }, { "title", "Hello, World!" } };
+        var data = new Dictionary<string, object?> { { "show", false }, { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -193,7 +191,7 @@ public class AttributeParserTest
     public void TestUnlessNotAttributeParser()
     {
         const string template = "<html><body><h1 x:unless=\"show\" x:inner-text=\"{title}\"></h1></body></html>";
-        var data = new Dictionary<string, object> { { "show", true }, { "title", "Hello, World!" } };
+        var data = new Dictionary<string, object?> { { "show", true }, { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -214,7 +212,7 @@ public class AttributeParserTest
     public void TestUnlessListAttributeParser()
     {
         const string template = "<html><body><p x:unless=\"items\">There are no items!</p></body></html>";
-        var data = new Dictionary<string, object> { { "items", new List<string> { "Item 1", "Item 2", "Item 3" } } };
+        var data = new Dictionary<string, object?> { { "items", new List<string> { "Item 1", "Item 2", "Item 3" } } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -225,7 +223,7 @@ public class AttributeParserTest
     public void TestUnlessListOfDictsAttributeParser()
     {
         const string template = "<html><body><p x:unless=\"items\">There are no items!</p></body></html>";
-        var data = new Dictionary<string, object>
+        var data = new Dictionary<string, object?>
         {
             {
                 "items",
@@ -242,7 +240,7 @@ public class AttributeParserTest
     public void TestUnlessEmptyListAttributeParser()
     {
         const string template = "<html><body><p x:unless=\"items\">There are no items!</p></body></html>";
-        var data = new Dictionary<string, object> { { "items", new List<string>() } };
+        var data = new Dictionary<string, object?> { { "items", new List<string>() } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -253,8 +251,7 @@ public class AttributeParserTest
     public void TestUnlessDictionaryAttributeParser()
     {
         const string template = "<html><body><p x:unless=\"items\">There are no items!</p></body></html>";
-        var data = new Dictionary<string, object>
-            { { "items", new Dictionary<string, string> { { "key1", "Item 1" }, { "key2", "Item 2" } } } };
+        var data = new Dictionary<string, object?> { { "items", new Dictionary<string, string> { { "key1", "Item 1" }, { "key2", "Item 2" } } } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -265,7 +262,7 @@ public class AttributeParserTest
     public void TestUnlessEmptyDictionaryAttributeParser()
     {
         const string template = "<html><body><p x:unless=\"items\">There are no items!</p></body></html>";
-        var data = new Dictionary<string, object> { { "items", new Dictionary<string, string>() } };
+        var data = new Dictionary<string, object?> { { "items", new Dictionary<string, string>() } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
@@ -288,7 +285,7 @@ public class AttributeParserTest
     {
         const string template =
             "<html><body><ul><li x:for=\"items\" x:as=\"item\"><span x:outer-text=\"{item}\" /></li></ul></body></html>";
-        var data = new Dictionary<string, object> { { "items", new List<string> { "Item 1", "Item 2", "Item 3" } } };
+        var data = new Dictionary<string, object?> { { "items", new List<string> { "Item 1", "Item 2", "Item 3" } } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
 
