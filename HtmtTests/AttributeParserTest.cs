@@ -291,4 +291,52 @@ public class AttributeParserTest
 
         Assert.AreEqual("<html><body><ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul></body></html>", html);
     }
+
+    [TestMethod]
+    public void TestInnerPartialAttributeParser()
+    {
+        const string template = "<html><body><div x:inner-partial=\"partial\" /></body></html>";
+        const string partial = "<h1>Hello, World!</h1>";
+        var data = new Dictionary<string, object?> { { "partial", partial } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><div><h1>Hello, World!</h1></div></body></html>", html);
+    }
+
+    [TestMethod]
+    public void TestInnerPartialAttributeParserWithData()
+    {
+        const string template = "<html><body><div x:inner-partial=\"partial\" /></body></html>";
+        const string partial = "<h1 x:inner-text=\"Hello, {name}!\"></h1>";
+        var data = new Dictionary<string, object?> { { "partial", partial }, { "name", "World" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><div><h1>Hello, World!</h1></div></body></html>", html);
+    }
+    
+    [TestMethod]
+    public void TestOuterPartialAttributeParser()
+    {
+        const string template = "<html><body><div x:outer-partial=\"partial\" /></body></html>";
+        const string partial = "<h1>Hello, World!</h1>";
+        var data = new Dictionary<string, object?> { { "partial", partial } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><h1>Hello, World!</h1></body></html>", html);
+    }
+    
+    [TestMethod]
+    public void TestOuterPartialAttributeParserWithData()
+    {
+        const string template = "<html><body><div x:outer-partial=\"partial\" /></body></html>";
+        const string partial = "<h1 x:inner-text=\"Hello, {name}!\"></h1>";
+        var data = new Dictionary<string, object?> { { "partial", partial }, { "name", "World" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><h1>Hello, World!</h1></body></html>", html);
+    }
 }
