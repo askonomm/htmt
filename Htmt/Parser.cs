@@ -65,7 +65,9 @@ public partial class Parser
             new OuterHtmlAttributeParser(),
             new IfAttributeParser(),
             new UnlessAttributeParser(),
-            new GenericValueAttributeParser()
+            new InnerPartialAttributeParser(),
+            new OuterPartialAttributeParser(),
+            new GenericValueAttributeParser(),
         ];
     }
     
