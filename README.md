@@ -4,6 +4,15 @@ A simple templating language for .NET projects that is a superset of HTML/XML an
 due to it being HTML/XML based and thus not needing any additional editor plugins. It fully supports 
 trimming and native AOT compilation.
 
+## Features
+
+- **Simple syntax**: Htmt is a superset of HTML/XML, so you can write your templates in any text editor.
+- **Interpolation**: You can interpolate values from a data dictionary into your templates.
+- **Conditionals**: You can show or hide blocks using expressions.
+- **Partials**: You can include other templates inside your templates.
+- **Loops**: You can loop over arrays and objects in your data dictionary.
+- **Custom attributes**: You can add custom attributes to your elements and write custom parsers for them.
+
 ## Example syntax
 
 ```html
@@ -123,6 +132,50 @@ Results in:
 <p>Hello, World!</p>
 ```
 
+### `x:inner-partial`
+
+Sets the inner HTML of the element to the value of the attribute, which is a partial template. 
+This is useful if you want to include another template inside the current template. 
+
+Htmt template where `partial` is `<p>Hello, World!</p>`:
+
+```html
+<div x:inner-partial="partial"></div>
+```
+
+Results in:
+
+```html
+<div>
+    <p>Hello, World!</p>
+</div>
+```
+
+The `partial` key has to be inside the Data dictionary, and it has to be a string that contains a valid Htmt template.
+
+The partial will inherit the data dictionary that the parent template has, so you can use the same data in the partial as you can in the parent template.
+
+### `x:outer-partial`
+
+Sets the outer HTML of the element to the value of the attribute, which is a partial template.
+This is useful if you want to replace the entire element with another template.
+
+Htmt template where `partial` is `<p>Hello, World!</p>`:
+
+```html
+<div x:outer-partial="partial"></div>
+```
+
+Results in:
+
+```html
+<p>Hello, World!</p>
+```
+
+The `partial` key has to be inside the Data dictionary, and it has to be a string that contains a valid Htmt template.
+
+The partial will inherit the data dictionary that the parent template has, so you can use the same data in the partial as you can in the parent template.
+
 ### `x:if`
 
 Removes the element if the attribute is falsey.
@@ -139,6 +192,20 @@ Results in:
 <!-- Empty -->
 ```
 
+The `if` attribute also supports complex expressions, like so:
+
+```html
+<div x:if="(show is true) and (title is 'Hello, World!')">Hello, World!</div>
+```
+
+This will only show the element if `show` is `true` and `title` is `Hello, World!`. The expression validator 
+supports the following operators: `is`, `or` and `and`. You can also use parentheses to group expressions, 
+in case you want to have more complex expressions. 
+
+- The `is` operator is used to compare two values, and it supports the following types of values: `string`, `int`, `float`, `bool` and `null`.
+- The `or` operator is used to combine two expressions with an OR operator.
+- The `and` operator is used to combine two expressions with an AND operator.
+
 ### `x:unless`
 
 Removes the element if the attribute is truthy.
@@ -154,6 +221,8 @@ Results in:
 ```html
 <!-- Empty -->
 ```
+
+The `unless` attribute supports the same complex expression as the `if` attribute.
 
 ### `x:for`
 
@@ -255,29 +324,9 @@ if you want to add your custom attribute parsers to the default ones. But you ca
 - `Htmt.AttributeParsers.InnerHtmlAttributeParser` - Parses the `x:inner-html` attribute.
 - `Htmt.AttributeParsers.OuterTextAttributeParser` - Parses the `x:outer-text` attribute.
 - `Htmt.AttributeParsers.OuterHtmlAttributeParser` - Parses the `x:outer-html` attribute.
+- `Htmt.AttributeParsers.InnerPartialAttributeParser` - Parses the `x:inner-partial` attribute.
+- `Htmt.AttributeParsers.OuterPartialAttributeParser` - Parses the `x:outer-partial` attribute.
 - `Htmt.AttributeParsers.IfAttributeParser` - Parses the `x:if` attribute.
 - `Htmt.AttributeParsers.UnlessAttributeParser` - Parses the `x:unless` attribute.
 - `Htmt.AttributeParsers.ForAttributeParser` - Parses the `x:for` attribute.
 - `Htmt.AttributeParsers.GenericValueAttributeParser` - Parses the `x:*` attributes.
-
-## Limitations
-
-Htmt is written on top of the `System.Xml` namespace, which means it has the same limitations as `XmlDocument`. 
-This means that some HTML that is otherwise allowed by the browsers will throw an error when parsed by Htmt. 
-
-For example, the following HTML will throw an error:
-
-```html
-<img src="image.jpeg">
-```
-
-This is because the `img` tag self-closes in HTML, but not in XML. 
-To fix this, you can add a closing tag like so:
-
-```html
-<img src="image.jpeg" />
-```
-
-While a third-party library would probably solve this, my goal was to keep the library 
-dependency-free and as simple as possible because I'm just one person and I want something that I can maintain easily 
-for a long time.
