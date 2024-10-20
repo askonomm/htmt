@@ -39,7 +39,7 @@ public class ParserTest
     }
     
     [TestMethod]
-    public void TestNoClosingTag()
+    public void TestVoidElButClosed()
     {
         const string template = "<html><head></head><body><img src=\"asd\" /></body></html>";
         var parser = new Htmt.Parser { Template = template };
@@ -49,11 +49,11 @@ public class ParserTest
     }
 
     [TestMethod]
-    public void TestNoClosingTagThrows()
+    public void TestVoidElButOpen()
     {
-        const string template = "<html><head></head><body><img src=\"asd\"></body></html>";
+        const string template = "<html><head></head><body><img src=\"asd\"><br><hr></body></html>";
         var parser = new Htmt.Parser { Template = template };
         
-        Assert.ThrowsException<XmlException>(() => parser.ToHtml());
+        Assert.AreEqual("<html><head></head><body><img src=\"asd\" /><br /><hr /></body></html>", parser.ToHtml());
     }
 }
