@@ -56,4 +56,13 @@ public class ParserTest
         
         Assert.AreEqual("<html><head></head><body><img src=\"asd\" /><br /><hr /></body></html>", parser.ToHtml());
     }
+
+    [TestMethod]
+    public void TestHtmlEntities()
+    {
+        const string template = "<html><head></head><body>&lt;div&gt;Hello, World!&lt;/div&gt;</body></html>";
+        var parser = new Htmt.Parser { Template = template };
+        
+        Assert.AreEqual("<html><head></head><body><div>Hello, World!</div></body></html>", parser.ToHtml());
+    }
 }
