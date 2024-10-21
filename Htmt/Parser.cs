@@ -43,6 +43,7 @@ public partial class Parser
             
             RemoveDoctype();
             CloseVoidElements();
+            TransformHtmlEntities();
         }
         
         var templateStr = $"<root xmlns:x=\"{HtmtNamespace}\">{Template}</root>";
@@ -135,6 +136,28 @@ public partial class Parser
             // replace with self-closing tag
             var newElement = element.Insert(element.Length - 1, "/");
             Template = Template.Replace(element, newElement);
+        }
+    }
+
+    [GeneratedRegex(@"&(?<entity>\w+);")]
+    private static partial Regex HtmlEntityRegex();
+    
+    /**
+     * Transforms HTML entities to their respective characters.
+     *
+     * This is necessary because the XML parser does not handle HTML entities.
+     */
+    private void TransformHtmlEntities()
+    {
+        var entityRegex = HtmlEntityRegex();
+        var matches = entityRegex.Matches(Template);
+        
+        foreach (Match match in matches)
+        {
+            var entity = match.Groups["entity"].Value;
+            var replacement = System.Net.WebUtility.HtmlDecode($"&{entity};");
+
+            Template = Template.Replace(match.Value, replacement);
         }
     }
     
