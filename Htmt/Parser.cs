@@ -43,8 +43,9 @@ public partial class Parser
             
             RemoveDoctype();
             CloseVoidElements();
-            TransformHtmlEntities();
         }
+        
+        TransformHtmlEntities();
         
         var templateStr = $"<root xmlns:x=\"{HtmtNamespace}\">{Template}</root>";
         using var reader = XmlReader.Create(new StringReader(templateStr), _xmlSettings);
