@@ -6,14 +6,14 @@
         <Nullable>enable</Nullable>
         <Authors>Asko Nõmm</Authors>
         <PackageId>Htmt</PackageId>
-        <Version>1.2.0</Version>
+        <Version>1.2.1</Version>
         <Description>HTML/XML templating library for .NET</Description>
         <PackageTags>html xml template</PackageTags>
         <PackageProjectUrl>https://github.com/askonomm/htmt</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/askonomm/htmt</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Added support for partials, complex conditional expressions and auto-closing of void elements in HTML.</PackageReleaseNotes>
+        <PackageReleaseNotes>Fixed an issue where usage of HTML entities caused Htmt to throw an exception.</PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     

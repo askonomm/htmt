@@ -315,6 +315,18 @@ public class AttributeParserTest
         
         Assert.AreEqual("<html><body><div><h1>Hello, World!</h1></div></body></html>", html);
     }
+
+    [TestMethod]
+    public void TestInnerPartialAttributeParserWithHtmlEntities()
+    {
+        const string template = "<html><body><div x:inner-partial=\"partial\" /></body></html>";
+        const string partial = "<h1>This way &rarr;</h1>";
+        var data = new Dictionary<string, object?> { { "partial", partial } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><div><h1>This way →</h1></div></body></html>", html);
+    }
     
     [TestMethod]
     public void TestOuterPartialAttributeParser()
@@ -338,5 +350,17 @@ public class AttributeParserTest
         var html = parser.ToHtml();
         
         Assert.AreEqual("<html><body><h1>Hello, World!</h1></body></html>", html);
+    }
+
+    [TestMethod]
+    public void TestOuterPartialAttributeParserWithHtmlEntities()
+    {
+        const string template = "<html><body><div x:outer-partial=\"partial\" /></body></html>";
+        const string partial = "<h1>This way &rarr;</h1>";
+        var data = new Dictionary<string, object?> { { "partial", partial } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><h1>This way →</h1></body></html>", html);
     }
 }
