@@ -8,7 +8,7 @@
         <PackageId>Htmt</PackageId>
         <Version>1.2.2</Version>
         <Description>HTML/XML templating library for .NET</Description>
-        <PackageTags>html xml template</PackageTags>
+        <PackageTags>html xml template templating engine compiler parser</PackageTags>
         <PackageProjectUrl>https://github.com/askonomm/htmt</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/askonomm/htmt</RepositoryUrl>
