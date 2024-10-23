@@ -5,7 +5,7 @@ namespace Htmt.AttributeParsers;
 public class GenericValueAttributeParser : IAttributeParser
 {
     public string XTag => "//*[@*[starts-with(name(), 'x:')]]";
-    
+
     public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
     {
         // No nodes found
@@ -13,15 +13,15 @@ public class GenericValueAttributeParser : IAttributeParser
         {
             return;
         }
-        
+
         foreach (var node in nodes)
         {
             if (node is not XmlElement n) continue;
-            
+
             var attributes = n.Attributes.Cast<XmlAttribute>()
                 .Where(a => a.Name.StartsWith("x:"))
                 .ToList();
-            
+
             foreach (var attr in attributes)
             {
                 var val = n.GetAttribute(attr.Name);

@@ -6,7 +6,7 @@ namespace Htmt.AttributeParsers;
 public class UnlessAttributeParser : IAttributeParser
 {
     public string XTag => "//*[@x:unless]";
-    
+
     public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
     {
         // No nodes found
@@ -21,7 +21,7 @@ public class UnlessAttributeParser : IAttributeParser
 
             var key = n.GetAttribute("x:unless");
             n.RemoveAttribute("x:unless");
-            
+
             // if key is a single word, we just check for a truthy value
             if (!key.Contains(' '))
             {
@@ -47,8 +47,8 @@ public class UnlessAttributeParser : IAttributeParser
             // if key contains multiple words, evaluate the expression with ExpressionValidator
             else
             {
-                var expression = new ExpressionValidator(key);
-                var result = expression.Validates(data);
+                var validator = new ExpressionBooleanValidator(key);
+                var result = validator.Validates(data);
 
                 if (result)
                 {

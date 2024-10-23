@@ -6,7 +6,7 @@ namespace Htmt.AttributeParsers;
 public class IfAttributeParser : IAttributeParser
 {
     public string XTag => "//*[@x:if]";
-    
+
     public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
     {
         // No nodes found
@@ -21,7 +21,7 @@ public class IfAttributeParser : IAttributeParser
 
             var key = n.GetAttribute("x:if");
             n.RemoveAttribute("x:if");
-            
+
             // if key is a single word, we just check for a truthy value
             if (!key.Contains(' '))
             {
@@ -51,12 +51,12 @@ public class IfAttributeParser : IAttributeParser
                     n.ParentNode?.RemoveChild(n);
                 }
             }
-            
+
             // if key contains multiple words, evaluate the expression with ExpressionValidator
             else
             {
-                var expression = new ExpressionValidator(key);
-                var result = expression.Validates(data);
+                var validator = new ExpressionBooleanValidator(key);
+                var result = validator.Validates(data);
 
                 if (!result)
                 {
