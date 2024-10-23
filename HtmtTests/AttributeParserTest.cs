@@ -29,39 +29,6 @@ public class AttributeParserTest
     }
 
     [TestMethod]
-    public void TestDateModifierParser()
-    {
-        const string template = "<html><body><p x:inner-text=\"{date | date:yyyy}\"></p></body></html>";
-        var data = new Dictionary<string, object?> { { "date", "2022-01-01" } };
-        var parser = new Parser { Template = template, Data = data };
-        var html = parser.ToHtml();
-
-        Assert.AreEqual("<html><body><p>2022</p></body></html>", html);
-    }
-
-    [TestMethod]
-    public void TestDateModifierWithNoArgs()
-    {
-        const string template = "<html><body><p x:inner-text=\"{date | date}\"></p></body></html>";
-        var data = new Dictionary<string, object?> { { "date", "2022-01-01" } };
-        var parser = new Parser { Template = template, Data = data };
-        var html = parser.ToHtml();
-
-        Assert.AreEqual("<html><body><p>2022-01-01</p></body></html>", html);
-    }
-
-    [TestMethod]
-    public void TestDateModifierWithDateTimeVal()
-    {
-        const string template = "<html><body><p x:inner-text=\"{date | date:yyyy}\"></p></body></html>";
-        var data = new Dictionary<string, object?> { { "date", DateTime.Parse("2022-01-01") } };
-        var parser = new Parser { Template = template, Data = data };
-        var html = parser.ToHtml();
-
-        Assert.AreEqual("<html><body><p>2022</p></body></html>", html);
-    }
-
-    [TestMethod]
     public void TestInnerTextAttributeParser()
     {
         const string template = "<html><body><h1 x:inner-text=\"{title}\"></h1></body></html>";

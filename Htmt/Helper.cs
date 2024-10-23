@@ -74,7 +74,12 @@ public partial class Helper
 
             var modifiers = new IExpressionModifier[]
             {
-                new DateExpressionModifier()
+                new DateExpressionModifier(),
+                new UppercaseExpressionModifier(),
+                new LowercaseExpressionModifier(),
+                new CapitalizeExpressionModifier(),
+                new TruncateExpressionModifier(),
+                new ReverseExpressionModifier(),
             };
 
             var value = new ExpressionModifierParser { Data = data, ExpressionModifiers = modifiers }.Parse(strippedName);

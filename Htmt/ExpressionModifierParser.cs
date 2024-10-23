@@ -18,7 +18,18 @@ public class ExpressionModifierParser
             return value;
         }
 
-        var modifier = parts[1];
+        var modifiers = parts.Skip(1);
+
+        foreach (var modifier in modifiers)
+        {
+            value = ApplyModifier(value, modifier);
+        }
+
+        return value;
+    }
+
+    private object? ApplyModifier(object? value, string modifier)
+    {
         var modifierName = modifier.Split(':', StringSplitOptions.TrimEntries)[0];
         var modifierArgs = modifier.Contains(':') ? modifier.Split(':', StringSplitOptions.TrimEntries)[1] : null;
 
