@@ -192,13 +192,13 @@ Results in:
 <!-- Empty -->
 ```
 
-The `if` attribute also supports complex expressions, like so:
+The `if` attribute also supports complex boolean expressions, like so:
 
 ```html
 <div x:if="(show is true) and (title is 'Hello, World!')">Hello, World!</div>
 ```
 
-This will only show the element if `show` is `true` and `title` is `Hello, World!`. The expression validator 
+This will only show the element if `show` is `true` and `title` is `Hello, World!`. The boolean expression validator 
 supports the following operators: `is`, `or` and `and`. You can also use parentheses to group expressions, 
 in case you want to have more complex expressions. 
 
@@ -222,7 +222,7 @@ Results in:
 <!-- Empty -->
 ```
 
-The `unless` attribute supports the same complex expression as the `if` attribute.
+The `unless` attribute supports the same boolean expressions as the `if` attribute.
 
 ### `x:for`
 
