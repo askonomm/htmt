@@ -38,13 +38,6 @@ trimming and native AOT compilation.
 </html>
 ```
 
-Note how in `x:if`, `x:for` and `x:as` attributes the value is not enclosed in curly braces whereas in `x:inner-text` and `x:inner-html` it is.
-That's because these attributes are not meant to be interpolated, but rather to be evaluated as expressions.
-
-Attributes that are meant to be interpolated are enclosed in curly braces, like `{title}` and `{post.title}`, 
-which will be replaced with the value of the `title` and `post.title` keys in the data dictionary, respectively. 
-It also means you can add other text around the interpolation, like `Hello, {name}!`.
-
 ## Installation
 
 ```bash
