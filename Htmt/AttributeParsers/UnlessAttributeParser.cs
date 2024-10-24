@@ -3,11 +3,11 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
-public class UnlessAttributeParser : IAttributeParser
+public class UnlessAttributeParser : BaseAttributeParser
 {
-    public string XTag => "//*[@x:unless]";
+    public override string XTag => "//*[@x:unless]";
 
-    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
+    public override void Parse(XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
@@ -25,7 +25,7 @@ public class UnlessAttributeParser : IAttributeParser
             // if key is a single word, we just check for a truthy value
             if (!key.Contains(' '))
             {
-                var value = Helper.FindValueByKeys(data, key.Split('.'));
+                var value = Utils.FindValueByKeys(Data, key.Split('.'));
 
                 var removeNode = value switch
                 {
@@ -47,8 +47,8 @@ public class UnlessAttributeParser : IAttributeParser
             // if key contains multiple words, evaluate the expression with ExpressionValidator
             else
             {
-                var validator = new ExpressionBooleanValidator(key);
-                var result = validator.Validates(data);
+                var validator = new ExpressionBooleanValidator { Expression = key, Data = Data };
+                var result = validator.Validates();
 
                 if (result)
                 {

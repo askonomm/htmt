@@ -2,11 +2,11 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
-public class GenericValueAttributeParser : IAttributeParser
+public class GenericValueAttributeParser : BaseAttributeParser
 {
-    public string XTag => "//*[@*[starts-with(name(), 'x:')]]";
+    public override string XTag => "//*[@*[starts-with(name(), 'x:')]]";
 
-    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
+    public override void Parse(XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
@@ -25,7 +25,7 @@ public class GenericValueAttributeParser : IAttributeParser
             foreach (var attr in attributes)
             {
                 var val = n.GetAttribute(attr.Name);
-                var newVal = Helper.ReplaceKeysWithData(val, data);
+                var newVal = ParseExpression(val);
                 n.SetAttribute(attr.Name[2..], newVal);
                 n.RemoveAttribute(attr.Name);
             }

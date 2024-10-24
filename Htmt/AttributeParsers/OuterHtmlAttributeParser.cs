@@ -2,11 +2,11 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
-public class OuterHtmlAttributeParser : IAttributeParser
+public class OuterHtmlAttributeParser : BaseAttributeParser
 {
-    public string XTag => "//*[@x:outer-html]";
-    
-    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
+    public override string XTag => "//*[@x:outer-html]";
+
+    public override void Parse(XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
@@ -20,15 +20,16 @@ public class OuterHtmlAttributeParser : IAttributeParser
 
             var outerHtmlVal = n.GetAttribute("x:outer-html");
             n.RemoveAttribute("x:outer-html");
-            
+
             if (string.IsNullOrEmpty(outerHtmlVal)) continue;
-            
+
             var outerXml = new XmlDocument();
-            outerXml.LoadXml($"<root>{Helper.ReplaceKeysWithData(outerHtmlVal, data)}</root>");
-            
+            outerXml.LoadXml($"<root>{ParseExpression(outerHtmlVal)}</root>");
+
+
             if (outerXml.DocumentElement?.FirstChild == null) continue;
-            
-            var importedNode = xml.ImportNode(outerXml.DocumentElement.FirstChild, true);
+
+            var importedNode = Xml.ImportNode(outerXml.DocumentElement.FirstChild, true);
             n.ParentNode?.ReplaceChild(importedNode, n);
         }
     }

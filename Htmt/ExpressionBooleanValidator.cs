@@ -3,17 +3,23 @@ using System.Text.RegularExpressions;
 
 namespace Htmt;
 
-public class ExpressionBooleanValidator(string expression)
+public class ExpressionBooleanValidator
 {
-    public bool Validates(Dictionary<string, object?> data)
+    public required string Expression { get; init; }
+    
+    public required Dictionary<string, object?> Data { get; init; }
+    
+    public bool Validates()
     {
-        return EvaluateExp(Normalize(data));
+        var normalizedExp = Normalize();
+            
+        return EvaluateExp(normalizedExp);
     }
 
-    private string Normalize(Dictionary<string, object?> data)
+    private string Normalize()
     {
-        var evaluatedExpression = expression;
-        var keyMatches = Regex.Matches(expression, """'(?<string>[^']*)'|(?<key>\w+)""");
+        var evaluatedExpression = Expression;
+        var keyMatches = Regex.Matches(Expression, """'(?<string>[^']*)'|(?<key>\w+)""");
 
         foreach (Match match in keyMatches)
         {
@@ -32,7 +38,7 @@ public class ExpressionBooleanValidator(string expression)
             if (bool.TryParse(key, out _)) continue;
             if (key == "null") continue;
 
-            var value = Helper.FindValueByKeys(data, key.Split('.'));
+            var value = Utils.FindValueByKeys(Data, key.Split('.'));
             var regex = new Regex($@"{key}");
 
             // if value is bool, lowercase it
@@ -64,7 +70,7 @@ public class ExpressionBooleanValidator(string expression)
             var subExp = exp.Substring(openIndex + 1, closeIndex - openIndex - 1);
             var subResult = EvaluateSimpleExp(subExp);
 
-            exp = exp.Substring(0, openIndex) + subResult.ToString().ToLower() + exp.Substring(closeIndex + 1);
+            exp = string.Concat(exp.AsSpan(0, openIndex), subResult.ToString().ToLower(), exp.AsSpan(closeIndex + 1));
         }
 
         return EvaluateSimpleExp(exp);
@@ -72,17 +78,12 @@ public class ExpressionBooleanValidator(string expression)
 
     private static bool EvaluateSimpleExp(string exp)
     {
-        var orParts = exp.Split(new[] { " or " }, StringSplitOptions.None);
+        var orParts = exp.Split([" or "], StringSplitOptions.None);
 
         foreach (var orPart in orParts)
         {
             var andParts = orPart.Split([" and "], StringSplitOptions.None);
-            var andResult = true;
-
-            foreach (var andPart in andParts)
-            {
-                andResult &= EvaluateCondition(andPart.Trim());
-            }
+            var andResult = andParts.Aggregate(true, (current, andPart) => current & EvaluateCondition(andPart.Trim()));
 
             if (andResult) return true;
         }

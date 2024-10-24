@@ -1,18 +1,22 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Xml;
 using Htmt.AttributeParsers;
+using Htmt.ExpressionModifiers;
 
 namespace Htmt;
 
 public partial class Parser
 {
-    public XmlDocument Xml { get; } = new();
+    private XmlDocument Xml { get; } = new();
 
-    public string Template { get; set; } = string.Empty;
+    public required string Template { get; set; }
 
     public Dictionary<string, object?> Data { get; init; } = [];
 
-    public IAttributeParser[] AttributeParsers { get; init; } = [];
+    private IAttributeParser[] AttributeParsers { get; init; } = DefaultAttributeParsers();
+
+    private IExpressionModifier[] ExpressionModifiers { get; init; } = DefaultExpressionModifiers();
 
     private XmlNamespaceManager _nsManager = null!;
 
@@ -70,6 +74,19 @@ public partial class Parser
             new InnerPartialAttributeParser(),
             new OuterPartialAttributeParser(),
             new GenericValueAttributeParser(),
+        ];
+    }
+    
+    public static IExpressionModifier[] DefaultExpressionModifiers()
+    {
+        return
+        [
+            new DateExpressionModifier(),
+            new CapitalizeExpressionModifier(),
+            new LowercaseExpressionModifier(),
+            new UppercaseExpressionModifier(),
+            new TruncateExpressionModifier(),
+            new ReverseExpressionModifier(),
         ];
     }
 
@@ -191,18 +208,15 @@ public partial class Parser
 
     private void RunAttributeParsers()
     {
-        var parsers = AttributeParsers;
-
-        if (parsers.Length == 0)
+        foreach (var parser in AttributeParsers)
         {
-            parsers = DefaultAttributeParsers();
-        }
-
-        foreach (var parser in parsers)
-        {
+            parser.Xml = Xml;
+            parser.Data = new Dictionary<string, object?>(Data);;
+            parser.ExpressionModifiers = ExpressionModifiers;
+            
             var nodes = Xml.DocumentElement?.SelectNodes(parser.XTag, _nsManager);
-            var clonedData = new Dictionary<string, object?>(Data);
-            parser.Parse(Xml, clonedData, nodes);
+            
+            parser.Parse(nodes);
         }
 
         // Remove all leftover attributes that start with x:
