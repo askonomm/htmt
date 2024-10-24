@@ -3,11 +3,11 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
-public partial class OuterTextAttributeParser : IAttributeParser
+public class OuterTextAttributeParser : BaseAttributeParser
 {
-    public string XTag => "//*[@x:outer-text]";
-    
-    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
+    public override string XTag => "//*[@x:outer-text]";
+
+    public override void Parse(XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
@@ -21,11 +21,11 @@ public partial class OuterTextAttributeParser : IAttributeParser
 
             var outerVal = n.GetAttribute("x:outer-text");
             n.RemoveAttribute("x:outer-text");
-            
+
             if (string.IsNullOrEmpty(outerVal)) continue;
-            
-            outerVal = Helper.ReplaceKeysWithData(outerVal, data);
-            n.ParentNode?.ReplaceChild(xml.CreateTextNode(outerVal), n);
+
+            outerVal = ParseExpression(outerVal);
+            n.ParentNode?.ReplaceChild(Xml.CreateTextNode(outerVal), n);
         }
     }
 }

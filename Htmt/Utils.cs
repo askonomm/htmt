@@ -1,10 +1,6 @@
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Xml;
+﻿namespace Htmt;
 
-namespace Htmt;
-
-public partial class Helper
+public class Utils
 {
     public static object? FindValueByKeys(Dictionary<string, object?> data, string[] keys)
     {
@@ -42,48 +38,22 @@ public partial class Helper
                 {
                     var newKeys = keys.Skip(1).ToArray();
 
-                    data = dict.ToDictionary(x => x.Key, x => (object?) x.Value);
+                    data = dict.ToDictionary(x => x.Key, x => (object?)x.Value);
                     keys = newKeys;
                     continue;
                 }
                 case Dictionary<string, bool?> dict:
                 {
                     var newKeys = keys.Skip(1).ToArray();
-                    
-                    data = dict.ToDictionary(x => x.Key, x => (object?) x.Value);
+
+                    data = dict.ToDictionary(x => x.Key, x => (object?)x.Value);
                     keys = newKeys;
                     continue;
                 }
-                
+
                 default:
                     return null;
             }
         }
-    }
-    
-    [GeneratedRegex(@"(?<name>\{.*?\})")]
-    private static partial Regex WholeKeyRegex();
-    
-    public static string ReplaceKeysWithData(string str, Dictionary<string, object?> data)
-    {
-        var matches = WholeKeyRegex().Matches(str).Select(x => x.Groups["name"].Value).ToArray();
-        
-        foreach (var match in matches)
-        {
-            var strippedName = match[1..^1];
-
-            var value = FindValueByKeys(data, strippedName.Split('.'));
-
-            str = value switch
-            {
-                string s => str.Replace(match, s),
-                int i => str.Replace(match, i.ToString()),
-                double d => str.Replace(match, d.ToString(CultureInfo.CurrentCulture)),
-                bool b => str.Replace(match, b.ToString()),
-                _ => str.Replace(match, "")
-            };
-        }
-        
-        return str;
     }
 }

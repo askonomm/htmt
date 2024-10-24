@@ -172,7 +172,7 @@ public class AttributeParserTest
         var data = new Dictionary<string, object?> { { "show", true }, { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
-        
+
         Assert.AreEqual("<html><body><h1>Hello, World!</h1></body></html>", html);
     }
 
@@ -268,7 +268,7 @@ public class AttributeParserTest
 
         Assert.AreEqual("<html><body><p>There are no items!</p></body></html>", html);
     }
-    
+
     [TestMethod]
     public void TestComplexExpressionUnlessAttributeParser()
     {
@@ -276,7 +276,7 @@ public class AttributeParserTest
         var data = new Dictionary<string, object?> { { "show", true }, { "title", "Hello, World!" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
-        
+
         Assert.AreEqual("<html><body></body></html>", html);
     }
 
@@ -300,7 +300,7 @@ public class AttributeParserTest
         var data = new Dictionary<string, object?> { { "partial", partial } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
-        
+
         Assert.AreEqual("<html><body><div><h1>Hello, World!</h1></div></body></html>", html);
     }
 
@@ -312,7 +312,7 @@ public class AttributeParserTest
         var data = new Dictionary<string, object?> { { "partial", partial }, { "name", "World" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
-        
+
         Assert.AreEqual("<html><body><div><h1>Hello, World!</h1></div></body></html>", html);
     }
 
@@ -324,10 +324,10 @@ public class AttributeParserTest
         var data = new Dictionary<string, object?> { { "partial", partial } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
-        
+
         Assert.AreEqual("<html><body><div><h1>This way →</h1></div></body></html>", html);
     }
-    
+
     [TestMethod]
     public void TestOuterPartialAttributeParser()
     {
@@ -336,10 +336,10 @@ public class AttributeParserTest
         var data = new Dictionary<string, object?> { { "partial", partial } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
-        
+
         Assert.AreEqual("<html><body><h1>Hello, World!</h1></body></html>", html);
     }
-    
+
     [TestMethod]
     public void TestOuterPartialAttributeParserWithData()
     {
@@ -348,7 +348,7 @@ public class AttributeParserTest
         var data = new Dictionary<string, object?> { { "partial", partial }, { "name", "World" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
-        
+
         Assert.AreEqual("<html><body><h1>Hello, World!</h1></body></html>", html);
     }
 
@@ -360,7 +360,7 @@ public class AttributeParserTest
         var data = new Dictionary<string, object?> { { "partial", partial } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
-        
+
         Assert.AreEqual("<html><body><h1>This way →</h1></body></html>", html);
     }
 }

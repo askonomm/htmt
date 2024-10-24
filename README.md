@@ -8,6 +8,8 @@ trimming and native AOT compilation.
 
 - **Simple syntax**: Htmt is a superset of HTML/XML, so you can write your templates in any text editor.
 - **Interpolation**: You can interpolate values from a data dictionary into your templates.
+- **Modifiers**: You can modify the interpolated values using filters.
+- **Custom modifiers**: You can write custom filters for your templates.
 - **Conditionals**: You can show or hide blocks using expressions.
 - **Partials**: You can include other templates inside your templates.
 - **Loops**: You can loop over arrays and objects in your data dictionary.
@@ -35,13 +37,6 @@ trimming and native AOT compilation.
     </body>
 </html>
 ```
-
-Note how in `x:if`, `x:for` and `x:as` attributes the value is not enclosed in curly braces whereas in `x:inner-text` and `x:inner-html` it is.
-That's because these attributes are not meant to be interpolated, but rather to be evaluated as expressions.
-
-Attributes that are meant to be interpolated are enclosed in curly braces, like `{title}` and `{post.title}`, 
-which will be replaced with the value of the `title` and `post.title` keys in the data dictionary, respectively. 
-It also means you can add other text around the interpolation, like `Hello, {name}!`.
 
 ## Installation
 
@@ -192,13 +187,13 @@ Results in:
 <!-- Empty -->
 ```
 
-The `if` attribute also supports complex expressions, like so:
+The `if` attribute also supports complex boolean expressions, like so:
 
 ```html
 <div x:if="(show is true) and (title is 'Hello, World!')">Hello, World!</div>
 ```
 
-This will only show the element if `show` is `true` and `title` is `Hello, World!`. The expression validator 
+This will only show the element if `show` is `true` and `title` is `Hello, World!`. The boolean expression validator 
 supports the following operators: `is`, `or` and `and`. You can also use parentheses to group expressions, 
 in case you want to have more complex expressions. 
 
@@ -222,7 +217,7 @@ Results in:
 <!-- Empty -->
 ```
 
-The `unless` attribute supports the same complex expression as the `if` attribute.
+The `unless` attribute supports the same boolean expressions as the `if` attribute.
 
 ### `x:for`
 
@@ -266,6 +261,68 @@ Results in:
 ```
 
 If `slug` is `hello-world`.
+
+## Modifiers
+
+All interpolated values can be modified using modifiers. Modifiers are applied to the value of the attribute, and they can be chained, like so:
+
+```html
+<h1 x:inner-text="{title | uppercase | reverse}"></h1>
+```
+
+Modifiers can also take arguments, like so:
+
+```html
+<h1 x:inner-text="{title | truncate:10}"></h1>
+```
+
+### `date`
+
+Formats a date string using the specified format.
+
+```html
+<p x:inner-text="{date | date:yyyy-MM-dd}"></p>
+```
+
+### `uppercase`
+
+Converts the value to uppercase.
+
+```html
+<p x:inner-text="{title | uppercase}"></p>
+```
+
+### `lowercase`
+
+Converts the value to lowercase.
+
+```html
+<p x:inner-text="{title | lowercase}"></p>
+```
+
+### `capitalize`
+
+Capitalizes the first letter of the value.
+
+```html
+<p x:inner-text="{title | capitalize}"></p>
+```
+
+### `reverse`
+
+Reverses the value.
+
+```html
+<p x:inner-text="{title | reverse}"></p>
+```
+
+### `truncate`
+
+Truncates the value to the specified length.
+
+```html
+<p x:inner-text="{title | truncate:10}"></p>
+```
 
 ## Extending
 
@@ -330,3 +387,45 @@ if you want to add your custom attribute parsers to the default ones. But you ca
 - `Htmt.AttributeParsers.UnlessAttributeParser` - Parses the `x:unless` attribute.
 - `Htmt.AttributeParsers.ForAttributeParser` - Parses the `x:for` attribute.
 - `Htmt.AttributeParsers.GenericValueAttributeParser` - Parses the `x:*` attributes.
+
+### Modifiers
+
+You can add (or replace) modifiers in Htmt by adding them to the `Modifiers` array, 
+when creating a new instance of the `Parser` class.
+
+```csharp
+var parser = new Htmt.Parser
+{
+    Template = template,
+    Data = data,
+    Modifiers = [
+        new MyCustomModifier()
+    ]
+};
+```
+
+A custom modifier must implement the `IExpressionModifier` interface:
+
+```csharp
+public interface IExpressionModifier
+{
+    public string Name { get; }
+
+    public object? Modify(object? value, string? args = null);
+}
+```
+
+The `Modify` method is where the modifier should do its work, and the `Name` property should return the name of the modifier.
+
+To get an array of default modifiers, you can call `Htmt.Parser.DefaultExpressionModifiers()`,
+
+if you want to add your custom modifiers to the default ones. But you can also mix and match however you like.
+
+#### List of built-in modifiers
+
+- `Htmt.ExpressionModifiers.DateExpressionModifier` - Formats a date string using the specified format.
+- `Htmt.ExpressionModifiers.UppercaseExpressionModifier` - Converts the value to uppercase.
+- `Htmt.ExpressionModifiers.LowercaseExpressionModifier` - Converts the value to lowercase.
+- `Htmt.ExpressionModifiers.CapitalizeExpressionModifier` - Capitalizes the first letter of the value.
+- `Htmt.ExpressionModifiers.ReverseExpressionModifier` - Reverses the value.
+- `Htmt.ExpressionModifiers.TruncateExpressionModifier` - Truncates the value to the specified length.
