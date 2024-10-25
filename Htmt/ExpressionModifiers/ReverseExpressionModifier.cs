@@ -1,5 +1,8 @@
 ﻿namespace Htmt.ExpressionModifiers;
 
+/// <summary>
+/// A modifier that reverses a string.
+/// </summary>
 public class ReverseExpressionModifier : IExpressionModifier
 {
     public string Name => "reverse";

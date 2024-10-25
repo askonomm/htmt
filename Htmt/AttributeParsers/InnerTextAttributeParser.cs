@@ -1,8 +1,10 @@
-using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for the x:inner-text attribute.
+/// </summary>
 public class InnerTextAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@x:inner-text]";

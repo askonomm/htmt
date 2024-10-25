@@ -3,6 +3,9 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for the x:if attribute.
+/// </summary>
 public class IfAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@x:if]";

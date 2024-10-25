@@ -1,7 +1,8 @@
-using System;
-
 namespace Htmt.ExpressionModifiers;
 
+/// <summary>
+/// A modifier that formats a date.
+/// </summary>
 public class DateExpressionModifier : IExpressionModifier
 {
     public string Name => "date";

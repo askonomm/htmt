@@ -1,5 +1,8 @@
 ﻿namespace Htmt.ExpressionModifiers;
 
+/// <summary>
+/// A modifier that capitalizes the first letter of a string.
+/// </summary>
 public class CapitalizeExpressionModifier : IExpressionModifier
 {
     public string Name => "capitalize";

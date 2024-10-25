@@ -3,6 +3,9 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for the x:outer-text attribute.
+/// </summary>
 public class OuterTextAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@x:outer-text]";

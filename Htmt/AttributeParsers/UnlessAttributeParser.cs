@@ -3,6 +3,9 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for the x:unless attribute.
+/// </summary>
 public class UnlessAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@x:unless]";

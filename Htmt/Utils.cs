@@ -1,7 +1,16 @@
 ﻿namespace Htmt;
 
+/// <summary>
+/// General utility methods class.
+/// </summary>
 public class Utils
 {
+    /// <summary>
+    /// Finds a value in a (potentially nested) dictionary by an array of keys.
+    /// </summary>
+    /// <param name="data">The dictionary to search.</param>
+    /// <param name="keys">The keys to search for.</param>
+    /// <returns>The value if found, otherwise null.</returns>
     public static object? FindValueByKeys(Dictionary<string, object?> data, string[] keys)
     {
         while (true)

@@ -1,29 +1,58 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 using Htmt.AttributeParsers;
 using Htmt.ExpressionModifiers;
 
 namespace Htmt;
 
+/// <summary>
+/// The main parser class that parses the template and returns it as HTML or XML.
+/// </summary>
 public partial class Parser
 {
+    /// <summary>
+    /// The XML document that is being parsed.
+    /// </summary>
     private XmlDocument Xml { get; } = new();
 
+    /// <summary>
+    /// The template to parse.
+    /// </summary>
     public required string Template { get; set; }
 
+    /// <summary>
+    /// The data that the parser uses to find values.
+    /// </summary>
     public Dictionary<string, object?> Data { get; init; } = [];
 
+    /// <summary>
+    /// The attribute parsers that the parser uses to parse attributes.
+    /// </summary>
     private IAttributeParser[] AttributeParsers { get; init; } = DefaultAttributeParsers();
 
+    /// <summary>
+    /// The expression modifiers that the parser uses to modify expressions.
+    /// </summary>
     private IExpressionModifier[] ExpressionModifiers { get; init; } = DefaultExpressionModifiers();
 
+    /// <summary>
+    /// The namespace manager for the XML document.
+    /// </summary>
     private XmlNamespaceManager _nsManager = null!;
 
+    /// <summary>
+    /// True if the template is an HTML document.
+    /// </summary>
     private bool _isHtml;
 
+    /// <summary>
+    /// The doctype of the document.
+    /// </summary>
     private string _docType = string.Empty;
 
+    /// <summary>
+    /// The settings for the XML reader.
+    /// </summary>
     private readonly XmlReaderSettings _xmlSettings = new()
     {
         IgnoreWhitespace = true,
@@ -33,8 +62,14 @@ public partial class Parser
         XmlResolver = null
     };
 
+    /// <summary>
+    /// Htmt uses the XHTML namespace for parsing HTML documents.
+    /// </summary>
     private const string HtmtNamespace = "http://www.w3.org/1999/xhtml";
 
+    /// <summary>
+    /// The constructor for the parser.
+    /// </summary>
     private void Parse()
     {
         _nsManager = new XmlNamespaceManager(Xml.NameTable);
@@ -60,6 +95,10 @@ public partial class Parser
         RemoveIdentifierFromNodes();
     }
 
+    /// <summary>
+    /// Default attribute parsers.
+    /// </summary>
+    /// <returns></returns>
     public static IAttributeParser[] DefaultAttributeParsers()
     {
         return
@@ -77,6 +116,10 @@ public partial class Parser
         ];
     }
     
+    /// <summary>
+    /// Default expression modifiers.
+    /// </summary>
+    /// <returns></returns>
     public static IExpressionModifier[] DefaultExpressionModifiers()
     {
         return
@@ -89,10 +132,12 @@ public partial class Parser
             new ReverseExpressionModifier(),
         ];
     }
-
-    /**
-     * Detects if the template is an HTML document.
-     */
+    
+    /// <summary>
+    /// Tests if the template is an HTML document.
+    /// </summary>
+    /// <param name="template">The template to test.</param>
+    /// <returns>Returns true if the template is an HTML document.</returns>
     private static bool IsHtml(string template)
     {
         var doctype = template.Trim().StartsWith("<!DOCTYPE", StringComparison.OrdinalIgnoreCase);
@@ -101,20 +146,26 @@ public partial class Parser
         return doctype || htmlTag;
     }
 
+    /// <summary>
+    /// The regex for the doctype.
+    /// </summary>
+    /// <returns></returns>
     [GeneratedRegex(@"<!DOCTYPE[^>]*>", RegexOptions.IgnoreCase, "en-US")]
     private static partial Regex DocTypeRegex();
 
-    /**
-     * Removes the doctype from the template to avoid issues with the XML parser.
-     */
+    /// <summary>
+    /// Removes the doctype from the template.
+    /// </summary>
     private void RemoveDoctype()
     {
         Template = DocTypeRegex().Replace(Template, string.Empty);
     }
-
-    /**
-     * Gets the doctype from the template, so it can be added back to the final HTML.
-     */
+    
+    /// <summary>
+    /// Gets the doctype from the template.
+    /// </summary>
+    /// <param name="template">The template to get the doctype from.</param>
+    /// <returns>Returns the doctype.</returns>
     private static string GetDoctype(string template)
     {
         var match = DocTypeRegex().Match(template);
@@ -122,6 +173,10 @@ public partial class Parser
         return match.Success ? match.Value : string.Empty;
     }
 
+    /// <summary>
+    /// Replaces void elements with self-closing tags.
+    /// This is necessary because the XML parser does not handle void elements.
+    /// </summary>
     private void CloseVoidElements()
     {
         var voidElements = new[]
@@ -157,14 +212,17 @@ public partial class Parser
         }
     }
 
+    /// <summary>
+    /// The regex for HTML entities.
+    /// </summary>
+    /// <returns></returns>
     [GeneratedRegex(@"&(?<entity>\w+);")]
     private static partial Regex HtmlEntityRegex();
 
-    /**
-     * Transforms HTML entities to their respective characters.
-     *
-     * This is necessary because the XML parser does not handle HTML entities.
-     */
+    /// <summary>
+    /// Transforms HTML entities to their respective characters.
+    /// This is necessary because the XML parser does not handle HTML entities.
+    /// </summary>
     private void TransformHtmlEntities()
     {
         var entityRegex = HtmlEntityRegex();
@@ -179,9 +237,10 @@ public partial class Parser
         }
     }
 
-    /**
-     * Parses the template and returns it as HTML.
-     */
+    /// <summary>
+    /// Returns the parsed template as HTML.
+    /// </summary>
+    /// <returns></returns>
     public string ToHtml()
     {
         Parse();
@@ -196,9 +255,10 @@ public partial class Parser
         return Xml.DocumentElement.FirstChild?.OuterXml ?? string.Empty;
     }
 
-    /**
-     * Parses the template and returns it as XML.
-     */
+    /// <summary>
+    /// Returns the parsed template as XML.
+    /// </summary>
+    /// <returns></returns>
     public XmlNode ToXml()
     {
         Parse();
@@ -206,6 +266,9 @@ public partial class Parser
         return Xml.DocumentElement?.FirstChild ?? Xml.CreateElement("root");
     }
 
+    /// <summary>
+    /// Runs all attribute parsers.
+    /// </summary>
     private void RunAttributeParsers()
     {
         foreach (var parser in AttributeParsers)
@@ -239,6 +302,9 @@ public partial class Parser
         }
     }
 
+    /// <summary>
+    /// Adds a unique identifier to all nodes.
+    /// </summary>
     private void AddIdentifierToNodes()
     {
         if (Xml.DocumentElement == null) return;
@@ -260,6 +326,9 @@ public partial class Parser
         }
     }
 
+    /// <summary>
+    /// Removes the unique identifier from all nodes.
+    /// </summary>
     private void RemoveIdentifierFromNodes()
     {
         // null check

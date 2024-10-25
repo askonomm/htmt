@@ -2,6 +2,9 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for generic value attributes.
+/// </summary>
 public class GenericValueAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@*[starts-with(name(), 'x:')]]";

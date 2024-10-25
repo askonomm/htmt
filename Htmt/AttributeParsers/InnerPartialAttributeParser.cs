@@ -2,6 +2,9 @@
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for the x:inner-partial attribute.
+/// </summary>
 public class InnerPartialAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@x:inner-partial]";

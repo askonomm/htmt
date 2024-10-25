@@ -1,5 +1,8 @@
 namespace Htmt.ExpressionModifiers;
 
+/// <summary>
+/// A modifier that converts a string to uppercase.
+/// </summary>
 public class UppercaseExpressionModifier : IExpressionModifier
 {
     public string Name => "uppercase";

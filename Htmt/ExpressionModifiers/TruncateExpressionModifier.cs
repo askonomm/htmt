@@ -1,5 +1,8 @@
 ﻿namespace Htmt.ExpressionModifiers;
 
+/// <summary>
+/// A modifier that truncates a string.
+/// </summary>
 public class TruncateExpressionModifier : IExpressionModifier
 {
     public string Name => "truncate";

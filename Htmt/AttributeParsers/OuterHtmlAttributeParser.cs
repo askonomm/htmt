@@ -2,6 +2,9 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for the x:outer-html attribute.
+/// </summary>
 public class OuterHtmlAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@x:outer-html]";

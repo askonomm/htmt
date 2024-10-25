@@ -3,12 +3,27 @@ using System.Text.RegularExpressions;
 
 namespace Htmt;
 
+/// <summary>
+/// A validator for boolean expressions.
+/// </summary>
 public class ExpressionBooleanValidator
 {
+    /// <summary>
+    /// The expression to validate.
+    /// </summary>
     public required string Expression { get; init; }
     
+    /// <summary>
+    /// The data to use for validation.
+    /// </summary>
     public required Dictionary<string, object?> Data { get; init; }
     
+    /// <summary>
+    /// Validates the expression.
+    /// </summary>
+    /// <returns>
+    /// Returns true if the expression is valid, otherwise false.
+    /// </returns>
     public bool Validates()
     {
         var normalizedExp = Normalize();
@@ -16,6 +31,12 @@ public class ExpressionBooleanValidator
         return EvaluateExp(normalizedExp);
     }
 
+    /// <summary>
+    /// Normalizes the expression by replacing keys with their values.
+    /// </summary>
+    /// <returns>
+    /// The normalized expression.
+    /// </returns>
     private string Normalize()
     {
         var evaluatedExpression = Expression;
@@ -55,6 +76,12 @@ public class ExpressionBooleanValidator
         return Regex.Replace(evaluatedExpression, "'(.*?)'", "$1");
     }
 
+    /// <summary>
+    /// Evaluates the expression.
+    /// </summary>
+    /// <param name="exp">The evaluated expression.</param>
+    /// <returns>Whether the expression is true or false.</returns>
+    /// <exception cref="SyntaxErrorException"></exception>
     private static bool EvaluateExp(string exp)
     {
         while (exp.Contains('('))
@@ -76,6 +103,11 @@ public class ExpressionBooleanValidator
         return EvaluateSimpleExp(exp);
     }
 
+    /// <summary>
+    /// Evaluates a simple expression.
+    /// </summary>
+    /// <param name="exp">The expression to evaluate.</param>
+    /// <returns>Whether the expression is true or false.</returns>
     private static bool EvaluateSimpleExp(string exp)
     {
         var orParts = exp.Split([" or "], StringSplitOptions.None);
@@ -91,6 +123,12 @@ public class ExpressionBooleanValidator
         return false;
     }
 
+    /// <summary>
+    /// Evaluates a condition.
+    /// </summary>
+    /// <param name="condition">The condition to evaluate.</param>
+    /// <returns>Whether the condition is true or false.</returns>
+    /// <exception cref="SyntaxErrorException"></exception>
     private static bool EvaluateCondition(string condition)
     {
         if (condition == "true") return true;

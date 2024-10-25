@@ -2,6 +2,9 @@
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for the x:outer-partial attribute.
+/// </summary>
 public class OuterPartialAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@x:outer-partial]";

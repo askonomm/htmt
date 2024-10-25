@@ -2,6 +2,9 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
+/// <summary>
+/// A parser for the x:for attribute.
+/// </summary>
 public class ForAttributeParser : BaseAttributeParser
 {
     public override string XTag => "//*[@x:for]";
