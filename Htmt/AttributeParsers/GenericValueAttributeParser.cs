@@ -7,7 +7,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class GenericValueAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@*[starts-with(name(), 'x:')]]";
+    public override string XTag => "//*[@*[starts-with(name(), 'x:attr-')]]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -22,14 +22,14 @@ public class GenericValueAttributeParser : BaseAttributeParser
             if (node is not XmlElement n) continue;
 
             var attributes = n.Attributes.Cast<XmlAttribute>()
-                .Where(a => a.Name.StartsWith("x:"))
+                .Where(a => a.Name.StartsWith("x:attr-"))
                 .ToList();
 
             foreach (var attr in attributes)
             {
                 var val = n.GetAttribute(attr.Name);
                 var newVal = ParseExpression(val);
-                n.SetAttribute(attr.Name[2..], newVal);
+                n.SetAttribute(attr.Name[7..], newVal);
                 n.RemoveAttribute(attr.Name);
             }
         }
