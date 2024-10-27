@@ -1,13 +1,15 @@
-using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
-public class InnerTextAttributeParser : IAttributeParser
+/// <summary>
+/// A parser for the x:inner-text attribute.
+/// </summary>
+public class InnerTextAttributeParser : BaseAttributeParser
 {
-    public string XTag => "//*[@x:inner-text]";
-    
-    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
+    public override string XTag => "//*[@x:inner-text]";
+
+    public override void Parse(XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
@@ -24,7 +26,7 @@ public class InnerTextAttributeParser : IAttributeParser
 
             if (string.IsNullOrEmpty(innerVal)) continue;
 
-            n.InnerText = Helper.ReplaceKeysWithData(innerVal, data);
+            n.InnerText = ParseExpression(innerVal);
         }
     }
 }

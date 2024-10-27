@@ -2,16 +2,19 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
-public class ForAttributeParser : IAttributeParser
+/// <summary>
+/// A parser for the x:for attribute.
+/// </summary>
+public class ForAttributeParser : BaseAttributeParser
 {
-    public string XTag => "//*[@x:for]";
-    
-    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
+    public override string XTag => "//*[@x:for]";
+
+    public override void Parse(XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
         {
-            return; 
+            return;
         }
 
         Parallel.ForEach(nodes.Cast<XmlNode>(), node =>
@@ -20,18 +23,18 @@ public class ForAttributeParser : IAttributeParser
 
             var collection = n.GetAttribute("x:for");
             var asVar = n.GetAttribute("x:as");
-            
+
             n.RemoveAttribute("x:for");
             n.RemoveAttribute("x:as");
 
-            var value = Helper.FindValueByKeys(data, collection.Split('.'));
+            var value = Utils.FindValueByKeys(Data, collection.Split('.'));
             if (value is not IEnumerable<object> enumerable) return;
 
-            var fragment = xml.CreateDocumentFragment();
+            var fragment = Xml.CreateDocumentFragment();
 
             foreach (var item in enumerable)
             {
-                var iterationData = new Dictionary<string, object?>(data);
+                var iterationData = new Dictionary<string, object?>(Data);
 
                 if (!string.IsNullOrEmpty(asVar))
                 {
@@ -40,7 +43,7 @@ public class ForAttributeParser : IAttributeParser
 
                 var iterationParser = new Parser { Template = n.OuterXml, Data = iterationData };
                 var itemXml = iterationParser.ToXml();
-                var importedNode = xml.ImportNode(itemXml, true);
+                var importedNode = Xml.ImportNode(itemXml, true);
 
                 fragment.AppendChild(importedNode);
             }

@@ -3,11 +3,14 @@ using System.Xml;
 
 namespace Htmt.AttributeParsers;
 
-public class InnerHtmlAttributeParser: IAttributeParser
+/// <summary>
+/// A parser for the x:inner-html attribute.
+/// </summary>
+public class InnerHtmlAttributeParser : BaseAttributeParser
 {
-    public string XTag => "//*[@x:inner-html]";
-    
-    public void Parse(XmlDocument xml, Dictionary<string, object?> data, XmlNodeList? nodes)
+    public override string XTag => "//*[@x:inner-html]";
+
+    public override void Parse(XmlNodeList? nodes)
     {
         // No nodes found
         if (nodes == null || nodes.Count == 0)
@@ -21,11 +24,11 @@ public class InnerHtmlAttributeParser: IAttributeParser
 
             var innerHtmlVal = n.GetAttribute("x:inner-html");
             n.RemoveAttribute("x:inner-html");
-            
+
             if (string.IsNullOrEmpty(innerHtmlVal)) continue;
-            
+
             var innerXml = new XmlDocument();
-            innerXml.LoadXml($"<root>{Helper.ReplaceKeysWithData(innerHtmlVal, data)}</root>");
+            innerXml.LoadXml($"<root>{ParseExpression(innerHtmlVal)}</root>");
             n.InnerXml = innerXml.DocumentElement?.InnerXml ?? string.Empty;
         }
     }
