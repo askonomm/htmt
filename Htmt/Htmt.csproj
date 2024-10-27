@@ -6,14 +6,20 @@
         <Nullable>enable</Nullable>
         <Authors>Asko Nõmm</Authors>
         <PackageId>Htmt</PackageId>
-        <Version>1.2.2</Version>
+        <Version>2.0.0</Version>
         <Description>HTML/XML templating library for .NET</Description>
         <PackageTags>html xml template templating engine compiler parser</PackageTags>
         <PackageProjectUrl>https://github.com/askonomm/htmt</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/askonomm/htmt</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Fixed an issue where usage of HTML entities in partials caused Htmt to throw an exception.</PackageReleaseNotes>
+        <PackageReleaseNotes>
+            - Added support for expression modifiers in the form of `expression | modifier`
+            - Renamed Generic Value Attributes to use `x:attr-*` intead of `x:*` to prevent conflicts with other attributes
+            
+            If you are using the `x:*` attributes, you will need to update your templates to use the new `x:attr-*` attributes.
+            Likewise, if you've built your own attribute parsers, you will need to update them as the API has changed as well.
+        </PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     
