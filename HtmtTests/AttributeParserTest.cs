@@ -8,7 +8,7 @@ public class AttributeParserTest
     [TestMethod]
     public void TestGenericValueAttributeParser()
     {
-        const string template = "<html><body><a x:href=\"{url}\" x:title=\"Hello {name}\">Click here</a></body></html>";
+        const string template = "<html><body><a x:attr-href=\"{url}\" x:attr-title=\"Hello {name}\">Click here</a></body></html>";
         var data = new Dictionary<string, object?> { { "url", "https://www.example.com" }, { "name", "Example Website" } };
         var parser = new Parser { Template = template, Data = data };
         var html = parser.ToHtml();
@@ -21,7 +21,7 @@ public class AttributeParserTest
     [TestMethod]
     public void TestGenericValueAttributeParserWithouData()
     {
-        const string template = "<html><body><a x:href=\"{url}\">Click here</a></body></html>";
+        const string template = "<html><body><a x:attr-href=\"{url}\">Click here</a></body></html>";
         var parser = new Parser { Template = template };
         var html = parser.ToHtml();
 

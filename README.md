@@ -1,17 +1,17 @@
 ﻿# Htmt
 
-A templating library for .NET projects designed to be easy to read, write and have good editor support
-without needing any additional editor plugins. It fully supports trimming and native AOT compilation.
+A simple templating language for .NET projects that is a superset of HTML/XML and is designed to be easy to read, write and have good editor support
+due to it being HTML/XML based and thus not needing any additional editor plugins. It fully supports 
+trimming and native AOT compilation.
 
 ## Features
 
 - **Simple syntax**: Htmt is a superset of HTML/XML, so you can write your templates in any text editor.
 - **Interpolation**: You can interpolate values from a data dictionary into your templates.
-- **Modifiers**: You can modify the interpolated values using modifiers.
-- **Conditionals**: You can show or hide blocks using simple or complex expressions.
+- **Conditionals**: You can show or hide blocks using expressions.
 - **Partials**: You can include other templates inside your templates.
 - **Loops**: You can loop over arrays and objects in your data dictionary.
-- **Extendable**: You can implement custom attribute parsers and expression modifiers.
+- **Custom attributes**: You can add custom attributes to your elements and write custom parsers for them.
 
 ## Example syntax
 
@@ -26,16 +26,22 @@ without needing any additional editor plugins. It fully supports trimming and na
         
         <div class="posts" x:if="posts">
             <div x:for="posts" x:as="post">
-                <h2 class="post-title">
-                    <a x:href="/blog/{post.url}" x:inner-text="{post.title | capitalize}"></a>
+                <h2>
+                    <a x:href="/blog/{post.url}" x:inner-text="{post.title}"></a>
                 </h2>
-                <div class="post-date" x:inner-text="{post.date | date:yyyy-MM-dd}"></div>
-                <div class="post-content" x:inner-html="{post.body}"></div>
+                <div x:inner-html="{post.body}"></div>
             </div>
         </div>
     </body>
 </html>
 ```
+
+Note how in `x:if`, `x:for` and `x:as` attributes the value is not enclosed in curly braces whereas in `x:inner-text` and `x:inner-html` it is.
+That's because these attributes are not meant to be interpolated, but rather to be evaluated as expressions.
+
+Attributes that are meant to be interpolated are enclosed in curly braces, like `{title}` and `{post.title}`, 
+which will be replaced with the value of the `title` and `post.title` keys in the data dictionary, respectively. 
+It also means you can add other text around the interpolation, like `Hello, {name}!`.
 
 ## Installation
 
@@ -49,7 +55,7 @@ A simple example of how to use Htmt with default configuration to generate HTML 
 
 ```csharp
 var template = "<h1 x:inner-text=\"{title}\"></h1>";
-var data = new Dictionary<string, object?> { { "title", "Hello, World!" } };
+var data = new Dictionary<string, object> { { "title", "Hello, World!" } };
 var parser = new Htmt.Parser { Template = template, Data = data };
 var html = parser.ToHtml();
 ```
@@ -186,13 +192,13 @@ Results in:
 <!-- Empty -->
 ```
 
-The `if` attribute also supports complex boolean expressions, like so:
+The `if` attribute also supports complex expressions, like so:
 
 ```html
 <div x:if="(show is true) and (title is 'Hello, World!')">Hello, World!</div>
 ```
 
-This will only show the element if `show` is `true` and `title` is `Hello, World!`. The boolean expression validator 
+This will only show the element if `show` is `true` and `title` is `Hello, World!`. The expression validator 
 supports the following operators: `is`, `or` and `and`. You can also use parentheses to group expressions, 
 in case you want to have more complex expressions. 
 
@@ -216,7 +222,7 @@ Results in:
 <!-- Empty -->
 ```
 
-The `unless` attribute supports the same boolean expressions as the `if` attribute.
+The `unless` attribute supports the same complex expression as the `if` attribute.
 
 ### `x:for`
 
@@ -243,14 +249,14 @@ Results in:
 Note that the `x:as` attribute is optional. If you just want to loop over a data structure,
 but you don't care about using the data of each individual iteration, you can omit it.
 
-### `x:*` (Generic Value Attributes)
+### `x:attr-*` (Generic Value Attributes)
 
-Above are all the special attributes that do some logical operation, but you can also use the `x:*` attributes to set any attribute on an element to the value of the attribute.
+Above are all the special attributes that do some logical operation, but you can also use the `x:attr-*` attributes to set any attribute on an element to the value of the attribute.
 
-For example, to set the `href` attribute of an element, you can use the `x:href` attribute:
+For example, to set the `href` attribute of an element, you can use the `x:attr-href` attribute:
 
 ```html
-<a x:href="/blog/{slug}">Hello, World!</a>
+<a x:attr-href="/blog/{slug}">Hello, World!</a>
 ```
 
 Results in:
@@ -259,69 +265,7 @@ Results in:
 <a href="/blog/hello-world">Hello, World!</a>
 ```
 
-If `slug` is `hello-world`.
-
-## Modifiers
-
-All interpolated values in expressions can be modified using modifiers. Modifiers are applied to the value of the attribute, and they can be chained, like so:
-
-```html
-<h1 x:inner-text="{title | uppercase | reverse}"></h1>
-```
-
-Modifiers can also take arguments, like so:
-
-```html
-<h1 x:inner-text="{title | truncate:10}"></h1>
-```
-
-### `date`
-
-Formats a date string using the specified format.
-
-```html
-<p x:inner-text="{date | date:yyyy-MM-dd}"></p>
-```
-
-### `uppercase`
-
-Converts the value to uppercase.
-
-```html
-<p x:inner-text="{title | uppercase}"></p>
-```
-
-### `lowercase`
-
-Converts the value to lowercase.
-
-```html
-<p x:inner-text="{title | lowercase}"></p>
-```
-
-### `capitalize`
-
-Capitalizes the first letter of the value.
-
-```html
-<p x:inner-text="{title | capitalize}"></p>
-```
-
-### `reverse`
-
-Reverses the value.
-
-```html
-<p x:inner-text="{title | reverse}"></p>
-```
-
-### `truncate`
-
-Truncates the value to the specified length.
-
-```html
-<p x:inner-text="{title | truncate:10}"></p>
-```
+If the `slug` is `hello-world`.
 
 ## Extending
 
@@ -341,28 +285,38 @@ var parser = new Htmt.Parser
 };
 ```
 
-A custom attribute parser must extend the `BaseAttributeParser` parser, like so:
+A custom attribute parser must implement the `IAttributeParser` interface:
 
 ```csharp
-public class CustomAttributeParser : BaseAttributeParser
+public interface IAttributeParser
 {
-    public override string XTag => "//*[@x:custom]";
+    public string XTag { get; }
     
-    public override void Parse(XmlNodeList? nodes)
+    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes);
+}
+```
+
+The `Parse` method is where the attribute parser should do its work, and the `XTag` property should return the xtag pattern for the nodes it should parse. 
+For example if you want to add a custom attribute parser for an attribute called `x:custom`, you would do the following:
+
+```csharp
+public class CustomAttributeParser : IAttributeParser
+{
+    public string XTag => "//*[@x:custom]";
+    
+    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
     {
         foreach (XmlNode node in nodes)
         {
-            // You can parse expressions here with ParseExpression(), and 
-            // do anything you want with the nodes.
+            // all of the nodes are nodes that have the `x:custom` attribute,
+            // so you can do whatever you want with them here.
         }
     }
 }
 ```
 
-The `Parse` method is where the attribute parser should do its work, and the `XTag` property should return the xtag pattern for the nodes it should parse.
-
 To get an array of default attribute parsers, you can call `Htmt.Parser.DefaultAttributeParsers()`, 
-if you want to add your custom attribute parsers to the default ones, but you can also mix and match however you like.
+if you want to add your custom attribute parsers to the default ones. But you can also mix and match however you like.
 
 #### List of built-in attribute parsers
 
@@ -376,45 +330,3 @@ if you want to add your custom attribute parsers to the default ones, but you ca
 - `Htmt.AttributeParsers.UnlessAttributeParser` - Parses the `x:unless` attribute.
 - `Htmt.AttributeParsers.ForAttributeParser` - Parses the `x:for` attribute.
 - `Htmt.AttributeParsers.GenericValueAttributeParser` - Parses the `x:*` attributes.
-
-### Modifiers
-
-You can add (or replace) modifiers in Htmt by adding them to the `Modifiers` array, 
-when creating a new instance of the `Parser` class.
-
-```csharp
-var parser = new Htmt.Parser
-{
-    Template = template,
-    Data = data,
-    Modifiers = [
-        new MyCustomModifier()
-    ]
-};
-```
-
-A custom modifier must implement the `IExpressionModifier` interface:
-
-```csharp
-public interface IExpressionModifier
-{
-    public string Name { get; }
-
-    public object? Modify(object? value, string? args = null);
-}
-```
-
-The `Modify` method is where the modifier should do its work, and the `Name` property should return the name of the modifier.
-
-To get an array of default modifiers, you can call `Htmt.Parser.DefaultExpressionModifiers()`,
-
-if you want to add your custom modifiers to the default ones, but you can also mix and match however you like.
-
-#### List of built-in modifiers
-
-- `Htmt.ExpressionModifiers.DateExpressionModifier` - Formats a date string using the specified format.
-- `Htmt.ExpressionModifiers.UppercaseExpressionModifier` - Converts the value to uppercase.
-- `Htmt.ExpressionModifiers.LowercaseExpressionModifier` - Converts the value to lowercase.
-- `Htmt.ExpressionModifiers.CapitalizeExpressionModifier` - Capitalizes the first letter of the value.
-- `Htmt.ExpressionModifiers.ReverseExpressionModifier` - Reverses the value.
-- `Htmt.ExpressionModifiers.TruncateExpressionModifier` - Truncates the value to the specified length.
