@@ -1,19 +1,17 @@
 ﻿# Htmt
 
-A simple templating language for .NET projects that is a superset of HTML/XML and is designed to be easy to read, write and have good editor support
-due to it being HTML/XML based and thus not needing any additional editor plugins. It fully supports 
-trimming and native AOT compilation.
+A templating library for .NET projects designed to be easy to read, write and have good editor support
+without needing any additional editor plugins. It fully supports trimming and native AOT compilation.
 
 ## Features
 
 - **Simple syntax**: Htmt is a superset of HTML/XML, so you can write your templates in any text editor.
 - **Interpolation**: You can interpolate values from a data dictionary into your templates.
-- **Modifiers**: You can modify the interpolated values using filters.
-- **Custom modifiers**: You can write custom filters for your templates.
-- **Conditionals**: You can show or hide blocks using expressions.
+- **Modifiers**: You can modify the interpolated values using modifiers.
+- **Conditionals**: You can show or hide blocks using simple or complex expressions.
 - **Partials**: You can include other templates inside your templates.
 - **Loops**: You can loop over arrays and objects in your data dictionary.
-- **Custom attributes**: You can add custom attributes to your elements and write custom parsers for them.
+- **Extendable**: You can implement custom attribute parsers and expression modifiers.
 
 ## Example syntax
 
@@ -28,10 +26,11 @@ trimming and native AOT compilation.
         
         <div class="posts" x:if="posts">
             <div x:for="posts" x:as="post">
-                <h2>
-                    <a x:href="/blog/{post.url}" x:inner-text="{post.title}"></a>
+                <h2 class="post-title">
+                    <a x:href="/blog/{post.url}" x:inner-text="{post.title | capitalize}"></a>
                 </h2>
-                <div x:inner-html="{post.body}"></div>
+                <div class="post-date" x:inner-text="{post.date | date:yyyy-MM-dd}"></div>
+                <div class="post-content" x:inner-html="{post.body}"></div>
             </div>
         </div>
     </body>
@@ -50,7 +49,7 @@ A simple example of how to use Htmt with default configuration to generate HTML 
 
 ```csharp
 var template = "<h1 x:inner-text=\"{title}\"></h1>";
-var data = new Dictionary<string, object> { { "title", "Hello, World!" } };
+var data = new Dictionary<string, object?> { { "title", "Hello, World!" } };
 var parser = new Htmt.Parser { Template = template, Data = data };
 var html = parser.ToHtml();
 ```
@@ -264,7 +263,7 @@ If `slug` is `hello-world`.
 
 ## Modifiers
 
-All interpolated values can be modified using modifiers. Modifiers are applied to the value of the attribute, and they can be chained, like so:
+All interpolated values in expressions can be modified using modifiers. Modifiers are applied to the value of the attribute, and they can be chained, like so:
 
 ```html
 <h1 x:inner-text="{title | uppercase | reverse}"></h1>
@@ -342,38 +341,28 @@ var parser = new Htmt.Parser
 };
 ```
 
-A custom attribute parser must implement the `IAttributeParser` interface:
+A custom attribute parser must extend the `BaseAttributeParser` parser, like so:
 
 ```csharp
-public interface IAttributeParser
+public class CustomAttributeParser : BaseAttributeParser
 {
-    public string XTag { get; }
+    public override string XTag => "//*[@x:custom]";
     
-    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes);
-}
-```
-
-The `Parse` method is where the attribute parser should do its work, and the `XTag` property should return the xtag pattern for the nodes it should parse. 
-For example if you want to add a custom attribute parser for an attribute called `x:custom`, you would do the following:
-
-```csharp
-public class CustomAttributeParser : IAttributeParser
-{
-    public string XTag => "//*[@x:custom]";
-    
-    public void Parse(XmlDocument xml, Dictionary<string, object> data, XmlNodeList? nodes)
+    public override void Parse(XmlNodeList? nodes)
     {
         foreach (XmlNode node in nodes)
         {
-            // all of the nodes are nodes that have the `x:custom` attribute,
-            // so you can do whatever you want with them here.
+            // You can parse expressions here with ParseExpression(), and 
+            // do anything you want with the nodes.
         }
     }
 }
 ```
 
+The `Parse` method is where the attribute parser should do its work, and the `XTag` property should return the xtag pattern for the nodes it should parse.
+
 To get an array of default attribute parsers, you can call `Htmt.Parser.DefaultAttributeParsers()`, 
-if you want to add your custom attribute parsers to the default ones. But you can also mix and match however you like.
+if you want to add your custom attribute parsers to the default ones, but you can also mix and match however you like.
 
 #### List of built-in attribute parsers
 
@@ -419,7 +408,7 @@ The `Modify` method is where the modifier should do its work, and the `Name` pro
 
 To get an array of default modifiers, you can call `Htmt.Parser.DefaultExpressionModifiers()`,
 
-if you want to add your custom modifiers to the default ones. But you can also mix and match however you like.
+if you want to add your custom modifiers to the default ones, but you can also mix and match however you like.
 
 #### List of built-in modifiers
 
