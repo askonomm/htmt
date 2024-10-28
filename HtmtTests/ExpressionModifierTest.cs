@@ -169,4 +169,26 @@ public class ExpressionModifierTest
 
         Assert.AreEqual("<html><body><p>!dlrow ,olleh</p></body></html>", html);
     }
+
+    [TestMethod]
+    public void TestModifierChaining()
+    {
+        const string template = "<html><body><p x:inner-text=\"{text | uppercase | reverse}\"></p></body></html>";
+        var data = new Dictionary<string, object?> { { "text", "hello, world!" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><p>!DLROW ,OLLEH</p></body></html>", html);
+    }
+
+    [TestMethod]
+    public void TestModifiersNoWhitespace()
+    {
+        const string template = "<html><body><p x:inner-text=\"{text | uppercase|reverse}\"></p></body></html>";
+        var data = new Dictionary<string, object?> { { "text", "hello, world!" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><p>!DLROW ,OLLEH</p></body></html>", html);
+    }
 }
