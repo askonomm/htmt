@@ -27,7 +27,7 @@ without needing any additional editor plugins. It fully supports trimming and na
         <div class="posts" x:if="posts">
             <div x:for="posts" x:as="post">
                 <h2 class="post-title">
-                    <a x:href="/blog/{post.url}" x:inner-text="{post.title | capitalize}"></a>
+                    <a x:attr-href="/blog/{post.url}" x:inner-text="{post.title | capitalize}"></a>
                 </h2>
                 <div class="post-date" x:inner-text="{post.date | date:yyyy-MM-dd}"></div>
                 <div class="post-content" x:inner-html="{post.body}"></div>
@@ -243,14 +243,14 @@ Results in:
 Note that the `x:as` attribute is optional. If you just want to loop over a data structure,
 but you don't care about using the data of each individual iteration, you can omit it.
 
-### `x:*` (Generic Value Attributes)
+### `x:attr-*` (Generic Value Attributes)
 
-Above are all the special attributes that do some logical operation, but you can also use the `x:*` attributes to set any attribute on an element to the value of the attribute.
+Above are all the special attributes that do some logical operation, but you can also use the `x:attr-*` attributes to set any attribute on an element to the value of the attribute.
 
-For example, to set the `href` attribute of an element, you can use the `x:href` attribute:
+For example, to set the `href` attribute of an element, you can use the `x:attr-href` attribute:
 
 ```html
-<a x:href="/blog/{slug}">Hello, World!</a>
+<a x:attr-href="/blog/{slug}">Hello, World!</a>
 ```
 
 Results in:
