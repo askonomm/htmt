@@ -6,19 +6,15 @@
         <Nullable>enable</Nullable>
         <Authors>Asko Nõmm</Authors>
         <PackageId>Htmt</PackageId>
-        <Version>2.0.0</Version>
+        <Version>2.0.1</Version>
         <Description>HTML/XML templating library for .NET</Description>
-        <PackageTags>html xml template templating engine compiler parser</PackageTags>
+        <PackageTags>html xml template templating engine compiler parser aot trimming</PackageTags>
         <PackageProjectUrl>https://github.com/askonomm/htmt</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/askonomm/htmt</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
-            - Added support for expression modifiers in the form of `expression | modifier`
-            - Renamed Generic Value Attributes to use `x:attr-*` intead of `x:*` to prevent conflicts with other attributes
-            
-            If you are using the `x:*` attributes, you will need to update your templates to use the new `x:attr-*` attributes.
-            Likewise, if you've built your own attribute parsers, you will need to update them as the API has changed as well.
+            No functional changes, just updated the README.md file.
         </PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
