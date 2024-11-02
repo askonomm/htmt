@@ -191,4 +191,26 @@ public class ExpressionModifierTest
         
         Assert.AreEqual("<html><body><p>!DLROW ,OLLEH</p></body></html>", html);
     }
+    
+    [TestMethod]
+    public void TestCountModifier()
+    {
+        const string template = "<html><body><p x:inner-text=\"{text | count}\"></p></body></html>";
+        var data = new Dictionary<string, object?> { { "text", "hello, world!" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><p>13</p></body></html>", html);
+    }
+    
+    [TestMethod]
+    public void TestCountModifierWithEnumerable()
+    {
+        const string template = "<html><body><p x:inner-text=\"{items | count}\"></p></body></html>";
+        var data = new Dictionary<string, object?> { { "items", new[] { 1, 2, 3, 4, 5 } } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><p>5</p></body></html>", html);
+    }
 }

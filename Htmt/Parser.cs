@@ -130,6 +130,7 @@ public partial class Parser
             new UppercaseExpressionModifier(),
             new TruncateExpressionModifier(),
             new ReverseExpressionModifier(),
+            new CountExpressionModifier(),
         ];
     }
     
