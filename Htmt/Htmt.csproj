@@ -6,15 +6,15 @@
         <Nullable>enable</Nullable>
         <Authors>Asko Nõmm</Authors>
         <PackageId>Htmt</PackageId>
-        <Version>2.0.1</Version>
-        <Description>HTML/XML templating library for .NET</Description>
+        <Version>2.1.0</Version>
+        <Description>Templating library with native AOT and trimming support.</Description>
         <PackageTags>html xml template templating engine compiler parser aot trimming</PackageTags>
         <PackageProjectUrl>https://github.com/askonomm/htmt</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/askonomm/htmt</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
-            No functional changes, just updated the README.md file.
+            - Added Count expression modifier.
         </PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
