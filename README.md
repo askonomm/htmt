@@ -323,6 +323,15 @@ Truncates the value to the specified length.
 <p x:inner-text="{title | truncate:10}"></p>
 ```
 
+### `count`
+
+Returns the count of the value, if the value is a `IEnumerable` or `string`.
+
+```html
+<p x:inner-text="{items | count}"></p>
+```
+
+
 ## Extending
 
 ### Attribute Parsers
@@ -418,3 +427,4 @@ if you want to add your custom modifiers to the default ones, but you can also m
 - `Htmt.ExpressionModifiers.CapitalizeExpressionModifier` - Capitalizes the first letter of the value.
 - `Htmt.ExpressionModifiers.ReverseExpressionModifier` - Reverses the value.
 - `Htmt.ExpressionModifiers.TruncateExpressionModifier` - Truncates the value to the specified length.
+- `Htmt.ExpressionModifiers.CountExpressionModifier` - Returns the count of the value.
