@@ -82,6 +82,7 @@ public partial class Parser
         AddIdentifierToNodes();
         RunAttributeParsers();
         RemoveIdentifierFromNodes();
+        RemoveXNamespace();
     }
 
     /// <summary>
@@ -314,6 +315,29 @@ public partial class Parser
             if (node is not XmlElement element) continue;
 
             element.RemoveAttribute("data-htmt-id");
+
+            foreach (XmlNode child in element.ChildNodes)
+            {
+                nodesToProcess.Enqueue(child);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Removes the x namespace from the document.
+    /// </summary>
+    private void RemoveXNamespace()
+    {
+        if (Xml.DocumentElement == null) return;
+
+        var nodesToProcess = new Queue<XmlNode>(Xml.DocumentElement.ChildNodes.Cast<XmlNode>());
+
+        while (nodesToProcess.Count > 0)
+        {
+            var node = nodesToProcess.Dequeue();
+            if (node is not XmlElement element) continue;
+
+            element.RemoveAttribute("xmlns:x");
 
             foreach (XmlNode child in element.ChildNodes)
             {
