@@ -96,4 +96,14 @@ public class ParserTest
 
         Assert.AreEqual("<html><head></head><body>→</body></html>", parser.ToHtml());
     }
+
+    [TestMethod]
+    public void TestRemoveXmlnsFromChildren()
+    {
+        const string template = "<html xmlns=\"http://www.w3.org/1999/xhtml\"><head></head><body><div x:for=\"items\" x:as=\"item\"><span x:inner-text=\"{item}\"></span></div></body></html>";
+        var data = new Dictionary<string, object?> { { "items", new[] { "One", "Two", "Three" } } };
+        var parser = new Htmt.Parser { Template = template, Data = data };
+
+        Assert.AreEqual("<html xmlns=\"http://www.w3.org/1999/xhtml\"><head></head><body><div><span>One</span></div><div><span>Two</span></div><div><span>Three</span></div></body></html>", parser.ToHtml());
+    }
 }

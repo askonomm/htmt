@@ -83,6 +83,7 @@ public partial class Parser
         RunAttributeParsers();
         RemoveIdentifierFromNodes();
         RemoveXNamespace();
+        RemoveXmlnsFromChildren();
     }
 
     /// <summary>
@@ -341,6 +342,32 @@ public partial class Parser
 
             foreach (XmlNode child in element.ChildNodes)
             {
+                nodesToProcess.Enqueue(child);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Removes the xmlns attribute from all children.
+    /// </summary>
+    private void RemoveXmlnsFromChildren()
+    {
+        if (Xml.DocumentElement == null) return;
+
+        var nodesToProcess = new Queue<XmlNode>(Xml.DocumentElement.ChildNodes.Cast<XmlNode>());
+
+        while (nodesToProcess.Count > 0)
+        {
+            var node = nodesToProcess.Dequeue();
+            if (node is not XmlElement element) continue;
+
+            foreach (XmlNode child in element.ChildNodes)
+            {
+                if (child is XmlElement childElement)
+                {
+                    childElement.RemoveAttribute("xmlns");
+                }
+
                 nodesToProcess.Enqueue(child);
             }
         }
