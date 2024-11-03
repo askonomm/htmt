@@ -213,4 +213,27 @@ public class ExpressionModifierTest
         
         Assert.AreEqual("<html><body><p>5</p></body></html>", html);
     }
+
+    [TestMethod]
+    public void TestCountModifierWithListOfPosts()
+    {
+        const string template = "<html><body><p x:inner-text=\"{posts | count}\"></p></body></html>";
+        
+        var data = new Dictionary<string, object?>
+        {
+            {
+                "posts", new List<Dictionary<string, object?>>
+                {
+                    new() { { "title", "Post 1" }, { "content", "Content 1" } },
+                    new() { { "title", "Post 2" }, { "content", "Content 2" } },
+                    new() { { "title", "Post 3" }, { "content", "Content 3" } },
+                }
+            }
+        };
+        
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><p>3</p></body></html>", html);
+    }
 }

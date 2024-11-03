@@ -41,11 +41,6 @@ public partial class Parser
     private XmlNamespaceManager _nsManager = null!;
 
     /// <summary>
-    /// True if the template is an HTML document.
-    /// </summary>
-    private bool _isHtml;
-
-    /// <summary>
     /// The doctype of the document.
     /// </summary>
     private string _docType = string.Empty;
@@ -74,16 +69,10 @@ public partial class Parser
     {
         _nsManager = new XmlNamespaceManager(Xml.NameTable);
         _nsManager.AddNamespace("x", HtmtNamespace);
+        _docType = GetDoctype(Template);
 
-        if (IsHtml(Template))
-        {
-            _isHtml = true;
-            _docType = GetDoctype(Template);
-
-            RemoveDoctype();
-            CloseVoidElements();
-        }
-
+        RemoveDoctype();
+        CloseVoidElements();
         TransformHtmlEntities();
 
         var templateStr = $"<root xmlns:x=\"{HtmtNamespace}\">{Template}</root>";
@@ -133,25 +122,12 @@ public partial class Parser
             new CountExpressionModifier(),
         ];
     }
-    
-    /// <summary>
-    /// Tests if the template is an HTML document.
-    /// </summary>
-    /// <param name="template">The template to test.</param>
-    /// <returns>Returns true if the template is an HTML document.</returns>
-    private static bool IsHtml(string template)
-    {
-        var doctype = template.Trim().StartsWith("<!DOCTYPE", StringComparison.OrdinalIgnoreCase);
-        var htmlTag = template.Trim().StartsWith("<html", StringComparison.OrdinalIgnoreCase);
-
-        return doctype || htmlTag;
-    }
 
     /// <summary>
-    /// The regex for the doctype.
+    /// The regex for the doc declaration (HTML or XML).
     /// </summary>
     /// <returns></returns>
-    [GeneratedRegex(@"<!DOCTYPE[^>]*>", RegexOptions.IgnoreCase, "en-US")]
+    [GeneratedRegex(@"(<!DOCTYPE[^>]*>)|(<\?xml[^>]*\?>)", RegexOptions.IgnoreCase, "en-US")]
     private static partial Regex DocTypeRegex();
 
     /// <summary>
@@ -248,12 +224,7 @@ public partial class Parser
 
         if (Xml.DocumentElement == null) return string.Empty;
 
-        if (_isHtml)
-        {
-            return $"{_docType}{Xml.DocumentElement.FirstChild?.OuterXml}";
-        }
-
-        return Xml.DocumentElement.FirstChild?.OuterXml ?? string.Empty;
+        return $"{_docType}{Xml.DocumentElement.InnerXml}";
     }
 
     /// <summary>

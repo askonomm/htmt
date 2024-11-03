@@ -1,5 +1,3 @@
-using System.Xml;
-
 namespace HtmtTests;
 
 [TestClass]
@@ -48,6 +46,18 @@ public class ParserTest
         Assert.AreEqual(
             "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\"><html><head><title>Hello, World!</title></head><body><h1>Welcome to the world!</h1></body></html>",
             html);
+    }
+
+    [TestMethod]
+    public void TestXmlDocument()
+    {
+        const string template = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><title x:inner-text=\"{title}\"></title><heading x:inner-text=\"{heading}\"></heading>";
+        var data = new Dictionary<string, object?>
+            { { "title", "Hello, World!" }, { "heading", "Welcome to the world!" } };
+        var parser = new Htmt.Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+
+        Assert.AreEqual("<?xml version=\"1.0\" encoding=\"UTF-8\"?><title>Hello, World!</title><heading>Welcome to the world!</heading>", html);
     }
 
     [TestMethod]
