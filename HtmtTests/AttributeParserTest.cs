@@ -329,6 +329,32 @@ public class AttributeParserTest
     }
 
     [TestMethod]
+    public void TestInnerPartialAttributeParserWithInterpolatedExpression()
+    {
+        const string template = "<html><body><div x:inner-partial=\"partials.{partial}\" /></body></html>";
+        const string partial = "<h1>Hello, World!</h1>";
+        var partials = new Dictionary<string, object?> { { "something", partial } };
+        var data = new Dictionary<string, object?> { { "partials", partials }, { "partial", "something" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+
+        Assert.AreEqual("<html><body><div><h1>Hello, World!</h1></div></body></html>", html);
+    }
+
+    [TestMethod]
+    public void TestInnerPartialAttributeParserWithInterpolatedExpressionNoData()
+    {
+        const string template = "<html><body><div x:inner-partial=\"partials.{partial}\" /></body></html>";
+        const string partial = "<h1>Hello, World!</h1>";
+        var partials = new Dictionary<string, object?> { { "something", partial } };
+        var data = new Dictionary<string, object?> { { "partials", partials } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><div /></body></html>", html);
+    }
+
+    [TestMethod]
     public void TestOuterPartialAttributeParser()
     {
         const string template = "<html><body><div x:outer-partial=\"partial\" /></body></html>";
@@ -362,5 +388,31 @@ public class AttributeParserTest
         var html = parser.ToHtml();
 
         Assert.AreEqual("<html><body><h1>This way →</h1></body></html>", html);
+    }
+
+    [TestMethod]
+    public void TestOuterPartialAttributeParserWithInterpolatedExpression()
+    {
+        const string template = "<html><body><div x:outer-partial=\"partials.{partial}\" /></body></html>";
+        const string partial = "<h1>Hello, World!</h1>";
+        var partials = new Dictionary<string, object?> { { "something", partial } };
+        var data = new Dictionary<string, object?> { { "partials", partials }, { "partial", "something" } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><h1>Hello, World!</h1></body></html>", html);
+    }
+
+    [TestMethod]
+    public void TestOuterPartialAttributeParserWithInterpolatedExpressionNoData()
+    {
+        const string template = "<html><body><div x:outer-partial=\"partials.{partial}\" /></body></html>";
+        const string partial = "<h1>Hello, World!</h1>";
+        var partials = new Dictionary<string, object?> { { "something", partial } };
+        var data = new Dictionary<string, object?> { { "partials", partials } };
+        var parser = new Parser { Template = template, Data = data };
+        var html = parser.ToHtml();
+        
+        Assert.AreEqual("<html><body><div /></body></html>", html);
     }
 }

@@ -25,8 +25,10 @@ public class OuterPartialAttributeParser : BaseAttributeParser
             n.RemoveAttribute("x:outer-partial");
 
             if (string.IsNullOrEmpty(outerPartial)) continue;
+            
+            var outerPartialValue = ParseExpression(outerPartial);
 
-            if (Utils.FindValueByKeys(Data, outerPartial.Split('.')) is not string partial) continue;
+            if (Utils.FindValueByKeys(Data, outerPartialValue.Split('.')) is not string partial) continue;
 
             var newNode = new Parser { Data = Data, Template = partial }.ToXml();
             var parent = n.ParentNode;

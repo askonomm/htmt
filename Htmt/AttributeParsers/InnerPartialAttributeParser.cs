@@ -25,8 +25,10 @@ public class InnerPartialAttributeParser : BaseAttributeParser
             n.RemoveAttribute("x:inner-partial");
 
             if (string.IsNullOrEmpty(innerPartial)) continue;
+            
+            var innerPartialValue = ParseExpression(innerPartial);
 
-            if (Utils.FindValueByKeys(Data, innerPartial.Split('.')) is not string partial) continue;
+            if (Utils.FindValueByKeys(Data, innerPartialValue.Split('.')) is not string partial) continue;
 
             n.InnerXml = new Parser { Data = Data, Template = partial }.ToXml().OuterXml;
         }
