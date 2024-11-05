@@ -152,10 +152,10 @@ The partial will inherit the data dictionary that the parent template has, so yo
 Inner partials also support interpolated expressions, so you can get partials dynamically, like so:
 
 ```html
-<div x:inner-partial="{partial}"></div>
+<div x:inner-partial="parts.{partial}"></div>
 ```
 
-Where `partial` is a key in the Data dictionary that contains a string with a valid Htmt template.
+Where `partial` is `{ "partial", "something" }`, and then `parts.something` would be the partial template it will load.
 
 ### `x:outer-partial`
 
@@ -181,10 +181,10 @@ The partial will inherit the data dictionary that the parent template has, so yo
 Outer partials also support interpolated expressions, so you can get partials dynamically, like so:
 
 ```html
-<div x:outer-partial="{partial}"></div>
+<div x:outer-partial="parts.{partial}"></div>
 ```
 
-Where `partial` is a key in the Data dictionary that contains a string with a valid Htmt template.
+Where `partial` is `{ "partial", "something" }`, and then `parts.something` would be the partial template it will load.
 
 ### `x:if`
 
