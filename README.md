@@ -149,6 +149,14 @@ The `partial` key has to be inside the Data dictionary, and it has to be a strin
 
 The partial will inherit the data dictionary that the parent template has, so you can use the same data in the partial as you can in the parent template.
 
+Inner partials also support interpolated expressions, so you can get partials dynamically, like so:
+
+```html
+<div x:inner-partial="{partial}"></div>
+```
+
+Where `partial` is a key in the Data dictionary that contains a string with a valid Htmt template.
+
 ### `x:outer-partial`
 
 Sets the outer HTML of the element to the value of the attribute, which is a partial template.
@@ -169,6 +177,14 @@ Results in:
 The `partial` key has to be inside the Data dictionary, and it has to be a string that contains a valid Htmt template.
 
 The partial will inherit the data dictionary that the parent template has, so you can use the same data in the partial as you can in the parent template.
+
+Outer partials also support interpolated expressions, so you can get partials dynamically, like so:
+
+```html
+<div x:outer-partial="{partial}"></div>
+```
+
+Where `partial` is a key in the Data dictionary that contains a string with a valid Htmt template.
 
 ### `x:if`
 
