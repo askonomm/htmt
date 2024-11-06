@@ -80,6 +80,15 @@ public class ParserTest
     }
 
     [TestMethod]
+    public void TestVoidElButOpen2()
+    {
+        const string template = "<html><head></head><body><ul><li>text<br></li></ul><hr></body></html>";
+        var parser = new Htmt.Parser { Template = template };
+
+        Assert.AreEqual("<html><head></head><body><ul><li>text<br /></li></ul><hr /></body></html>", parser.ToHtml());
+    }
+
+    [TestMethod]
     public void TestHtmlEntities()
     {
         const string template = "<html><head></head><body>&lt;div&gt;Hello, World!&lt;/div&gt;</body></html>";
