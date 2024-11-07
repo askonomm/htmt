@@ -282,8 +282,18 @@ public partial class Parser
     public XmlNode ToXml()
     {
         Parse();
+        
+        var fragment = Xml.CreateDocumentFragment();
+        var childNodes = Xml.DocumentElement?.ChildNodes;
+        
+        if (childNodes == null) return fragment;
+        
+        foreach (XmlNode node in childNodes)
+        {
+            fragment.AppendChild(Xml.ImportNode(node, true));
+        }
 
-        return Xml.DocumentElement?.FirstChild ?? Xml.CreateElement("root");
+        return fragment;
     }
 
     /// <summary>

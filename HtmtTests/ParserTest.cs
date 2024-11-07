@@ -133,4 +133,15 @@ public class ParserTest
         
         Assert.AreEqual("<html><head><script defer=\"\" src=\"\"></script></head><body></body></html>", parser.ToHtml());
     }
+
+    [TestMethod]
+    public void TestMultipleRootNodesInPartials()
+    {
+        const string template = "<html><head></head><body><div x:outer-partial=\"partial\"></div></body></html>";
+        const string partial = "<div>hello</div><span x:inner-text=\"{item}\"></span>";
+        var data = new Dictionary<string, object?> { { "partial", partial }, { "item", "world" } };
+        var parser = new Htmt.Parser { Template = template, Data = data };
+        
+        Assert.AreEqual("<html><head></head><body><div>hello</div><span>world</span></body></html>", parser.ToHtml());
+    }
 }
