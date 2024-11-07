@@ -72,6 +72,7 @@ public partial class Parser
         _docType = GetDoctype(Template);
 
         RemoveDoctype();
+        FillBooleanAttributes();
         CloseVoidElements();
         TransformHtmlEntities();
 
@@ -188,6 +189,53 @@ public partial class Parser
             // replace with self-closing tag
             var newElement = element.Insert(element.Length - 1, "/");
             Template = Template.Replace(element, newElement);
+        }
+    }
+    
+    [GeneratedRegex(@"(<[^>]*?)(?<attr>\s[\w-]+)(?=\s|>|/>)", RegexOptions.IgnoreCase)]
+    private static partial Regex BooleanAttributeRegex(); 
+
+    /// <summary>
+    /// Fills boolean HTML attributes such as "checked" or "defer".
+    /// </summary>
+    private void FillBooleanAttributes()
+    {
+        var voidAttributes = new Dictionary<string, string>
+        {
+            { "allowfullscreen", "" },
+            { "async", "" },
+            { "autofocus", "" },
+            { "autoplay", "" },
+            { "checked", "" },
+            { "controls", "" },
+            { "default", "" },
+            { "defer", "" },
+            { "disabled", "" },
+            { "formnovalidate", "" },
+            { "hidden", "" },
+            { "ismap", "" },
+            { "itemscope", "" },
+            { "loop", "" },
+            { "multiple", "" },
+            { "muted", "" },
+            { "nomodule", "" },
+            { "novalidate", "" },
+            { "open", "" },
+            { "playsinline", "" },
+            { "readonly", "" },
+            { "required", "" },
+            { "reversed", "" },
+            { "selected", "" }
+        };
+        
+        foreach (Match match in BooleanAttributeRegex().Matches(Template))
+        {
+            var attribute = match.Groups["attr"].Value.Trim();
+
+            if (!voidAttributes.TryGetValue(attribute, out var val)) continue;
+
+            // Replace the attribute with the filled one
+            Template = Template.Replace(attribute, $"{attribute}=\"{val}\"");
         }
     }
 
