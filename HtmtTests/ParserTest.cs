@@ -115,4 +115,22 @@ public class ParserTest
 
         Assert.AreEqual("<html xmlns=\"http://www.w3.org/1999/xhtml\"><head></head><body><div><span>One</span></div><div><span>Two</span></div><div><span>Three</span></div></body></html>", parser.ToHtml());
     }
+
+    [TestMethod]
+    public void TestFillVoidAttributes()
+    {
+        const string template = "<html><head></head><body><input type=\"checkbox\" checked /></body></html>";
+        var parser = new Htmt.Parser { Template = template };
+        
+        Assert.AreEqual("<html><head></head><body><input type=\"checkbox\" checked=\"\" /></body></html>", parser.ToHtml());
+    }
+    
+    [TestMethod]
+    public void TestFillVoidAttributes2()
+    {
+        const string template = "<html><head><script defer src=\"\"></script></head><body></body></html>";
+        var parser = new Htmt.Parser { Template = template };
+        
+        Assert.AreEqual("<html><head><script defer=\"\" src=\"\"></script></head><body></body></html>", parser.ToHtml());
+    }
 }
