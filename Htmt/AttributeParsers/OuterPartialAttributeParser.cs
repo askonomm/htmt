@@ -7,7 +7,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class OuterPartialAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@x:outer-partial]";
+    public override string XTag => "//*[@x:outer-partial or @data-htmt-outer-partial]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -21,7 +21,11 @@ public class OuterPartialAttributeParser : BaseAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var outerPartial = n.GetAttribute("x:outer-partial");
+            var outerPartial = string.IsNullOrEmpty(n.GetAttribute("x:outer-partial")) ? 
+                n.GetAttribute("data-htmt-outer-partial") : 
+                n.GetAttribute("x:outer-partial");
+            
+            n.RemoveAttribute("data-htmt-outer-partial");
             n.RemoveAttribute("x:outer-partial");
 
             if (string.IsNullOrEmpty(outerPartial)) continue;

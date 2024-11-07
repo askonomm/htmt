@@ -1,5 +1,7 @@
 ﻿# Htmt
 
+![](https://github.com/askonomm/htmt/actions/workflows/test.yml/badge.svg)
+
 A templating library for .NET projects designed to be easy to read, write and have good editor support
 without needing any additional editor plugins. It fully supports trimming and native AOT compilation.
 
@@ -58,7 +60,10 @@ You can also generate XML output via the `ToXml()` method.
 
 ## Attributes
 
-### `x:inner-text`
+HTMT works by parsing attributes in the template. HTMT attributes start with either `x:` or `data-htmt-`. The `x:` prefix is meant as a shorthand for `data-htmt-`, so you can use either one. The 
+only difference is that `x:` is not valid HTML, so if you want to write valid HTML, you should use `data-htmt-`.
+
+### `x:inner-text` or `data-htmt-inner-text`
 
 Sets the inner text of the element to the value of the attribute.
 
@@ -74,7 +79,7 @@ Results in:
 <h1>Hello, World!</h1>
 ```
 
-### `x:inner-html`
+### `x:inner-html` or `data-htmt-inner-html`
 
 Sets the inner HTML of the element to the value of the attribute.
 
@@ -92,7 +97,7 @@ Results in:
 </div>
 ```
 
-### `x:outer-text`
+### `x:outer-text` or `data-htmt-outer-text`
 
 Sets the outer text of the element to the value of the attribute.
 This is useful if you want to replace the entire element with text.
@@ -109,7 +114,7 @@ Results in:
 Hello, World!
 ```
 
-### `x:outer-html`
+### `x:outer-html` or `data-htmt-outer-html`
 
 Sets the outer HTML of the element to the value of the attribute.
 This is useful if you want to replace the entire element with HTML.
@@ -126,7 +131,7 @@ Results in:
 <p>Hello, World!</p>
 ```
 
-### `x:inner-partial`
+### `x:inner-partial` or `data-htmt-inner-partial`
 
 Sets the inner HTML of the element to the value of the attribute, which is a partial template.
 This is useful if you want to include another template inside the current template.
@@ -157,7 +162,7 @@ Inner partials also support interpolated expressions, so you can get partials dy
 
 Where `partial` is `{ "partial", "something" }`, and then `parts.something` would be the partial template it will load.
 
-### `x:outer-partial`
+### `x:outer-partial` or `data-htmt-outer-partial`
 
 Sets the outer HTML of the element to the value of the attribute, which is a partial template.
 This is useful if you want to replace the entire element with another template.
@@ -186,7 +191,7 @@ Outer partials also support interpolated expressions, so you can get partials dy
 
 Where `partial` is `{ "partial", "something" }`, and then `parts.something` would be the partial template it will load.
 
-### `x:if`
+### `x:if` or `data-htmt-if`
 
 Removes the element if the attribute is falsey.
 
@@ -216,7 +221,7 @@ in case you want to have more complex expressions.
 - The `or` operator is used to combine two expressions with an OR operator.
 - The `and` operator is used to combine two expressions with an AND operator.
 
-### `x:unless`
+### `x:unless` or `data-htmt-unless`
 
 Removes the element if the attribute is truthy.
 
@@ -234,7 +239,7 @@ Results in:
 
 The `unless` attribute supports the same boolean expressions as the `if` attribute.
 
-### `x:for`
+### `x:for` or `data-htmt-for`
 
 Repeats the element for each item in the attribute.
 
@@ -256,10 +261,10 @@ Results in:
 </ul>
 ```
 
-Note that the `x:as` attribute is optional. If you just want to loop over a data structure,
+Note that the `x:as` or `data-htmt-as` attribute is optional. If you just want to loop over a data structure,
 but you don't care about using the data of each individual iteration, you can omit it.
 
-### `x:attr-*` (Generic Value Attributes)
+### `x:attr-*` or `data-htmt-attr-*` (Generic Value Attributes)
 
 Above are all the special attributes that do some logical operation, but you can also use the `x:attr-*` attributes to set any attribute on an element to the value of the attribute.
 
@@ -371,7 +376,7 @@ A custom attribute parser must extend the `BaseAttributeParser` parser, like so:
 ```csharp
 public class CustomAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@x:custom]";
+    public override string XTag => "//*[@x:custom or @data-htmt-custom]";
     
     public override void Parse(XmlNodeList? nodes)
     {
@@ -391,16 +396,16 @@ if you want to add your custom attribute parsers to the default ones, but you ca
 
 #### List of built-in attribute parsers
 
-- `Htmt.AttributeParsers.InnerTextAttributeParser` - Parses the `x:inner-text` attribute.
-- `Htmt.AttributeParsers.InnerHtmlAttributeParser` - Parses the `x:inner-html` attribute.
-- `Htmt.AttributeParsers.OuterTextAttributeParser` - Parses the `x:outer-text` attribute.
-- `Htmt.AttributeParsers.OuterHtmlAttributeParser` - Parses the `x:outer-html` attribute.
-- `Htmt.AttributeParsers.InnerPartialAttributeParser` - Parses the `x:inner-partial` attribute.
-- `Htmt.AttributeParsers.OuterPartialAttributeParser` - Parses the `x:outer-partial` attribute.
-- `Htmt.AttributeParsers.IfAttributeParser` - Parses the `x:if` attribute.
-- `Htmt.AttributeParsers.UnlessAttributeParser` - Parses the `x:unless` attribute.
-- `Htmt.AttributeParsers.ForAttributeParser` - Parses the `x:for` attribute.
-- `Htmt.AttributeParsers.GenericValueAttributeParser` - Parses the `x:*` attributes.
+- `Htmt.AttributeParsers.InnerTextAttributeParser` - Parses the `x:inner-text` / `data-htmt-inner-text` attribute.
+- `Htmt.AttributeParsers.InnerHtmlAttributeParser` - Parses the `x:inner-html` / `data-htmt-inner-html` attribute.
+- `Htmt.AttributeParsers.OuterTextAttributeParser` - Parses the `x:outer-text` / `data-htmt-outer-text` attribute.
+- `Htmt.AttributeParsers.OuterHtmlAttributeParser` - Parses the `x:outer-html` / `data-htmt-outer-html` attribute.
+- `Htmt.AttributeParsers.InnerPartialAttributeParser` - Parses the `x:inner-partial` / `data-htmt-inner-partial` attribute.
+- `Htmt.AttributeParsers.OuterPartialAttributeParser` - Parses the `x:outer-partial` / `data-htmt-outer-partial` attribute.
+- `Htmt.AttributeParsers.IfAttributeParser` - Parses the `x:if` / `data-htmt-if` attribute.
+- `Htmt.AttributeParsers.UnlessAttributeParser` - Parses the `x:unless` / `data-htmt-unless` attribute.
+- `Htmt.AttributeParsers.ForAttributeParser` - Parses the `x:for` / `data-htmt-for` attribute.
+- `Htmt.AttributeParsers.GenericValueAttributeParser` - Parses the `x:attr-*` / `data-htmt-attr-*` attributes.
 
 ### Modifiers
 

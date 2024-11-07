@@ -224,9 +224,7 @@ public partial class Parser
     {
         Parse();
 
-        if (Xml.DocumentElement == null) return string.Empty;
-
-        return $"{_docType}{Xml.DocumentElement.InnerXml}";
+        return Xml.DocumentElement == null ? string.Empty : $"{_docType}{Xml.DocumentElement.InnerXml}";
     }
 
     /// <summary>
@@ -256,8 +254,8 @@ public partial class Parser
             parser.Parse(nodes);
         }
 
-        // Remove all leftover attributes that start with x:
-        var leftOverNodes = Xml.DocumentElement?.SelectNodes("//*[@*[starts-with(name(), 'x:')]]", _nsManager);
+        // Remove all leftover attributes that start with x: or data-htmt-:
+        var leftOverNodes = Xml.DocumentElement?.SelectNodes("//*[@*[starts-with(name(), 'x:') or starts-with(name(), 'data-htmt-')]]", _nsManager);
 
         if (leftOverNodes == null) return;
 
@@ -266,14 +264,14 @@ public partial class Parser
             if (node is not XmlElement element) continue;
 
             var attributes = element.Attributes.Cast<XmlAttribute>()
-                .Where(a => a.Name.StartsWith("x:"))
+                .Where(a => a.Name.StartsWith("x:") || a.Name.StartsWith("data-htmt-"))
                 .ToList();
 
             foreach (var attr in attributes)
             {
                 element.RemoveAttribute(attr.Name);
             }
-        }
+        }   
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class InnerHtmlAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@x:inner-html]";
+    public override string XTag => "//*[@x:inner-html or @data-htmt-inner-html]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -22,7 +22,11 @@ public class InnerHtmlAttributeParser : BaseAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var innerHtmlVal = n.GetAttribute("x:inner-html");
+            var innerHtmlVal = string.IsNullOrEmpty(n.GetAttribute("x:inner-html")) ? 
+                n.GetAttribute("data-htmt-inner-html") : 
+                n.GetAttribute("x:inner-html");
+            
+            n.RemoveAttribute("data-htmt-inner-html");
             n.RemoveAttribute("x:inner-html");
 
             if (string.IsNullOrEmpty(innerHtmlVal)) continue;

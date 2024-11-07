@@ -8,7 +8,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class UnlessAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@x:unless]";
+    public override string XTag => "//*[@x:unless or @data-htmt-unless]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -22,7 +22,11 @@ public class UnlessAttributeParser : BaseAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var key = n.GetAttribute("x:unless");
+            var key = string.IsNullOrEmpty(n.GetAttribute("x:unless")) ? 
+                n.GetAttribute("data-htmt-unless") : 
+                n.GetAttribute("x:unless");
+            
+            n.RemoveAttribute("data-htmt-unless");
             n.RemoveAttribute("x:unless");
 
             // if key is a single word, we just check for a truthy value
