@@ -6,14 +6,14 @@
         <Nullable>enable</Nullable>
         <Authors>Asko Nõmm</Authors>
         <PackageId>Htmt</PackageId>
-        <Version>2.2.0</Version>
+        <Version>2.3.0</Version>
         <Description>Templating library with native AOT and trimming support.</Description>
         <PackageTags>html xml template templating engine compiler parser aot trimming</PackageTags>
         <PackageProjectUrl>https://github.com/askonomm/htmt</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/askonomm/htmt</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReleaseNotes>Added ability to use interpolated expressions in partial attributes.</PackageReleaseNotes>
+        <PackageReleaseNotes>Added compatibility for boolean attributes in HTML, and data-htmt- prefix as an alternative to x:.</PackageReleaseNotes>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
     
