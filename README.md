@@ -1,5 +1,7 @@
 ﻿# Htmt
 
+https://github.com/askonomm/htmt/actions/workflows/test.yml/badge.svg
+
 A templating library for .NET projects designed to be easy to read, write and have good editor support
 without needing any additional editor plugins. It fully supports trimming and native AOT compilation.
 
