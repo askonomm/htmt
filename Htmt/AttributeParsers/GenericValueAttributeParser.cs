@@ -7,7 +7,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class GenericValueAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@*[starts-with(name(), 'x:attr-')]]";
+    public override string XTag => "//*[@*[starts-with(name(), 'x:attr-') or starts-with(name(), 'data-htmt-attr-')]]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -22,14 +22,15 @@ public class GenericValueAttributeParser : BaseAttributeParser
             if (node is not XmlElement n) continue;
 
             var attributes = n.Attributes.Cast<XmlAttribute>()
-                .Where(a => a.Name.StartsWith("x:attr-"))
+                .Where(a => a.Name.StartsWith("x:attr-") || a.Name.StartsWith("data-htmt-attr-"))
                 .ToList();
 
             foreach (var attr in attributes)
             {
                 var val = n.GetAttribute(attr.Name);
                 var newVal = ParseExpression(val);
-                n.SetAttribute(attr.Name[7..], newVal);
+
+                n.SetAttribute(attr.Name.StartsWith("x:attr-") ? attr.Name[7..] : attr.Name[15..], newVal);
                 n.RemoveAttribute(attr.Name);
             }
         }

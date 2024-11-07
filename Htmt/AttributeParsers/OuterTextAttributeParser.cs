@@ -8,7 +8,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class OuterTextAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@x:outer-text]";
+    public override string XTag => "//*[@x:outer-text or @data-htmt-outer-text]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -22,7 +22,11 @@ public class OuterTextAttributeParser : BaseAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var outerVal = n.GetAttribute("x:outer-text");
+            var outerVal = string.IsNullOrEmpty(n.GetAttribute("x:outer-text")) ? 
+                n.GetAttribute("data-htmt-outer-text") : 
+                n.GetAttribute("x:outer-text");
+            
+            n.RemoveAttribute("data-htmt-outer-text");
             n.RemoveAttribute("x:outer-text");
 
             if (string.IsNullOrEmpty(outerVal)) continue;

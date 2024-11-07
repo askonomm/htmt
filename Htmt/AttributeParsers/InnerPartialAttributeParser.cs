@@ -7,7 +7,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class InnerPartialAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@x:inner-partial]";
+    public override string XTag => "//*[@x:inner-partial or @data-htmt-inner-partial]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -21,7 +21,11 @@ public class InnerPartialAttributeParser : BaseAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var innerPartial = n.GetAttribute("x:inner-partial");
+            var innerPartial = string.IsNullOrEmpty(n.GetAttribute("x:inner-partial")) ? 
+                n.GetAttribute("data-htmt-inner-partial") : 
+                n.GetAttribute("x:inner-partial");
+            
+            n.RemoveAttribute("data-htmt-inner-partial");
             n.RemoveAttribute("x:inner-partial");
 
             if (string.IsNullOrEmpty(innerPartial)) continue;

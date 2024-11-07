@@ -7,7 +7,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class ForAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@x:for]";
+    public override string XTag => "//*[@x:for or @data-htmt-for]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -21,11 +21,18 @@ public class ForAttributeParser : BaseAttributeParser
         {
             if (node is not XmlElement n) return;
 
-            var collection = n.GetAttribute("x:for");
-            var asVar = n.GetAttribute("x:as");
+            var collection = string.IsNullOrEmpty(n.GetAttribute("x:for")) ? 
+                n.GetAttribute("data-htmt-for") : 
+                n.GetAttribute("x:for");
+            
+            var asVar = string.IsNullOrEmpty(n.GetAttribute("x:as")) ? 
+                n.GetAttribute("data-htmt-as") : 
+                n.GetAttribute("x:as");
 
             n.RemoveAttribute("x:for");
+            n.RemoveAttribute("data-htmt-for");
             n.RemoveAttribute("x:as");
+            n.RemoveAttribute("data-htmt-as");
 
             var value = Utils.FindValueByKeys(Data, collection.Split('.'));
             if (value is not IEnumerable<object> enumerable) return;

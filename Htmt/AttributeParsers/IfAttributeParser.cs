@@ -8,7 +8,7 @@ namespace Htmt.AttributeParsers;
 /// </summary>
 public class IfAttributeParser : BaseAttributeParser
 {
-    public override string XTag => "//*[@x:if]";
+    public override string XTag => "//*[@x:if or @data-htmt-if]";
 
     public override void Parse(XmlNodeList? nodes)
     {
@@ -22,7 +22,11 @@ public class IfAttributeParser : BaseAttributeParser
         {
             if (node is not XmlElement n) continue;
 
-            var key = n.GetAttribute("x:if");
+            var key = string.IsNullOrEmpty(n.GetAttribute("x:if")) ? 
+                n.GetAttribute("data-htmt-if") : 
+                n.GetAttribute("x:if");
+            
+            n.RemoveAttribute("data-htmt-if");
             n.RemoveAttribute("x:if");
 
             // if key is a single word, we just check for a truthy value
