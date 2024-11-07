@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <Authors>Asko Nõmm</Authors>
         <PackageId>Htmt</PackageId>
-        <Version>2.3.0</Version>
+        <Version>2.3.1</Version>
         <Description>Templating library with native AOT and trimming support.</Description>
         <PackageTags>html xml template templating engine compiler parser aot trimming</PackageTags>
         <PackageProjectUrl>https://github.com/askonomm/htmt</PackageProjectUrl>
